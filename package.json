@@ -1,0 +1,12 @@
+{
+  "name": "gpssi-ghana",
+  "version": "1.0.0",
+  "description": "Ghana Public Service Satisfaction Index — MYD Ghana",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
