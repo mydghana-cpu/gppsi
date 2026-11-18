@@ -534,6 +534,28 @@ html{scroll-padding-top:84px}
 .form-card.wiz .wz-nav{display:flex;justify-content:space-between;gap:10px;margin-top:8px}
 .wz-nav button{flex:1;padding:13px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border:2px solid var(--green);background:#fff;color:var(--green)}.wz-nav .wz-next{background:var(--green);color:#fff}.wz-nav .wz-back{flex:0 0 35%}
 .form-card.wiz .wz-err{display:block;color:var(--red);font-size:13px;font-weight:600;min-height:18px;margin-top:8px}
+
+/* ─── FLOW / LEADERBOARD / PILOT ─────────────────────── */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);position:relative;margin-top:26px}
+.flow::before{content:'';position:absolute;top:24px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),var(--green));opacity:.5}
+.fl{text-align:center;padding:0 8px;position:relative}
+.fl-ic{position:relative;width:50px;height:50px;margin:0 auto 10px;border-radius:50%;background:#fff;border:2px solid var(--green);color:var(--green);display:grid;place-items:center;font-size:22px}
+.fl-ic b{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--dark);font-size:11px;display:grid;place-items:center}
+.fl h3{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px}.fl p{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:700px){.flow{grid-template-columns:1fr;gap:14px;margin-top:20px}.flow::before{top:0;bottom:0;left:24px;right:auto;width:2px;height:auto}.fl{display:grid;grid-template-columns:50px 1fr;gap:0 14px;text-align:left;padding:0}.fl-ic{margin:0;grid-row:span 2}.fl h3{align-self:end}}
+@media(max-width:1099px){.home-main .section{padding:32px 0}}
+.lb{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.lb-row{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+.lb-rk{width:34px;height:34px;border-radius:50%;background:var(--green-light);color:var(--green);font-weight:800;display:grid;place-items:center;flex-shrink:0}.lb-row:nth-child(1) .lb-rk{background:var(--gold);color:var(--dark)}
+.lb-main{flex:1;min-width:0}.lb-name{font-weight:700;color:var(--dark)}.lb-meta{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:2px 0 8px}
+.lb-bar{height:6px;background:var(--off);border-radius:3px;overflow:hidden}.lb-bar i{display:block;height:100%;border-radius:3px}.lb-sub{font-size:11px;color:var(--muted);margin-top:6px}
+.lb-score{text-align:right;flex-shrink:0}.lb-score b{display:block;font-family:'Playfair Display',serif;font-size:26px;color:var(--dark);line-height:1;margin-bottom:6px}
+.lb-empty{text-align:center;padding:44px 20px;background:#fff;border:1px dashed var(--border);border-radius:16px;color:var(--muted)}.lb-empty h3{font-family:'Playfair Display',serif;color:var(--dark);font-size:22px;margin:10px 0 8px}.lb-empty p{max-width:460px;margin:0 auto 18px;font-size:14px}.lb-empty-ic{width:56px;height:56px;border-radius:50%;background:var(--green-light);color:var(--green);display:grid;place-items:center;margin:0 auto;font-size:26px}
+.lb-coll{margin-top:22px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px}.lb-coll h3{font-size:15px;color:var(--dark)}.lb-coll p{font-size:12px;color:var(--muted);margin-bottom:8px}
+.pg2{display:flex;align-items:center;gap:12px;font-size:13px;padding:7px 0;border-top:1px solid var(--border)}.pg2 span{flex:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pbar{flex:1;height:6px;background:var(--off);border-radius:3px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--gold)}.pg2 b{font-size:12px;color:var(--muted);min-width:44px;text-align:right}
+.rk-cat{max-width:260px;margin-top:8px}
+.pilot-note{display:none;color:rgba(255,255,255,.75);font-size:13px;line-height:1.5;max-width:560px}.pilot .pilot-note{display:block}.pilot .live-bar .live-stat{display:none}.home-side .pilot-note{grid-column:1/-1}
+.dp-link.off{opacity:.5;pointer-events:none}
 </style>
 </head>
 <body>
@@ -629,15 +651,8 @@ html{scroll-padding-top:84px}
 <div class="section section-alt">
     <div class="container">
       <div class="label">How It Works</div>
-      <h2 class="title">From Citizen Experience<br>to National Accountability</h2>
-      <p class="subtitle">Five steps that convert everyday service experiences into rankings powerful enough to move institutions.</p>
-      <div class="steps">
-        <div class="step"><div class="step-num">01</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-smartphone"/></svg></div><h3>Citizens Rate Services</h3><p>Via website, mobile, or our toll-free hotline — any Ghanaian can rate a public institution and share their experience.</p></div>
-        <div class="step"><div class="step-num">02</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-graduation-cap"/></svg></div><h3>Youth Teams Collect Data</h3><p>Youth field teams trained by us conduct in-person surveys and service-quality checks.</p></div>
-        <div class="step"><div class="step-num">03</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-microscope"/></svg></div><h3>Independent Analysis</h3><p>Our technical team applies a transparent, weighted scoring methodology, published openly on our Methodology page.</p></div>
-        <div class="step"><div class="step-num">04</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div><h3>Rankings Published</h3><p>Annual national report and rankings released at a press conference, briefing Parliament, ministries, media, and development partners.</p></div>
-        <div class="step"><div class="step-num">05</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-refresh-cw"/></svg></div><h3>Institutions Improve</h3><p>Media scrutiny, parliamentary questions, and public pressure drive institutions to reform. Standards rise. The cycle repeats.</p></div>
-      </div>
+      <h2 class="title" style="font-size:clamp(24px,3vw,34px)">From citizen experience to national accountability</h2>
+      <div class="flow"><div class="fl"><div class="fl-ic"><svg class="ic" aria-hidden="true"><use href="#i-smartphone"/></svg><b>1</b></div><h3>Citizens rate</h3><p>Rate any public institution online or by hotline.</p></div><div class="fl"><div class="fl-ic"><svg class="ic" aria-hidden="true"><use href="#i-graduation-cap"/></svg><b>2</b></div><h3>Youth teams survey</h3><p>Trained youth teams run in-person surveys.</p></div><div class="fl"><div class="fl-ic"><svg class="ic" aria-hidden="true"><use href="#i-microscope"/></svg><b>3</b></div><h3>Independent analysis</h3><p>Transparent weighted scoring, published openly.</p></div><div class="fl"><div class="fl-ic"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg><b>4</b></div><h3>Rankings published</h3><p>An annual national report shared with Parliament and the media.</p></div><div class="fl"><div class="fl-ic"><svg class="ic" aria-hidden="true"><use href="#i-refresh-cw"/></svg><b>5</b></div><h3>Institutions improve</h3><p>Public pressure drives reform, then the cycle repeats.</p></div></div>
     </div>
   </div>
 
@@ -685,9 +700,6 @@ html{scroll-padding-top:84px}
       <div class="label" style="justify-content:center">MYD Ghana</div>
       <h2 class="title">Movement for Youth Development</h2>
       <p class="subtitle" style="margin:0 auto 32px">GPSSI is an initiative of the Movement for Youth Development (MYD Ghana), a programme of Betterway Group LBG, a company limited by guarantee registered in Ghana and based in Accra.</p>
-      <div class="partners-wrap" style="justify-content:center">
-        
-      </div>
       <div style="margin-top:32px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
         <button class="btn btn-green" onclick="goTo('about')">Learn About GPSSI →</button>
         <button class="btn btn-outline-green" onclick="goTo('contact')">Partner With Us</button>
@@ -698,7 +710,7 @@ html{scroll-padding-top:84px}
 </div>
 <aside class="home-side">
 <div class="side-panel side-live"><div class="live-bar">
-    <div class="live-indicator"><div class="live-dot"></div><div class="live-text">Live Data</div></div>
+    <div class="live-indicator"><div class="live-dot"></div><div class="live-text">Live Data</div></div><div class="pilot-note">Pilot phase. Scores are published only after an institution has enough verified ratings, so every number you see is reliable.</div>
     <div class="live-stat"><div class="live-stat-n" id="lb-total">—</div><div class="live-stat-l">Total Responses</div></div>
     <div class="live-stat"><div class="live-stat-n" id="lb-avg">—</div><div class="live-stat-l">Avg Score /100</div></div>
     <div class="live-stat"><div class="live-stat-n" id="lb-inst">—</div><div class="live-stat-l">Institutions Rated</div></div>
@@ -724,7 +736,7 @@ html{scroll-padding-top:84px}
     </div>
   </div>
   <div class="live-bar">
-    <div class="live-indicator"><div class="live-dot"></div><div class="live-text">Live Data</div></div>
+    <div class="live-indicator"><div class="live-dot"></div><div class="live-text">Live Data</div></div><div class="pilot-note">Pilot phase. Scores are published only after an institution has enough verified ratings, so every number you see is reliable.</div>
     <div class="live-stat"><div class="live-stat-n" id="rp-total">—</div><div class="live-stat-l">Total Responses</div></div>
     <div class="live-stat"><div class="live-stat-n" id="rp-avg">—</div><div class="live-stat-l">National Avg /100</div></div>
     <div class="live-stat"><div class="live-stat-n" id="rp-inst">—</div><div class="live-stat-l">Institutions Rated</div></div>
@@ -734,16 +746,17 @@ html{scroll-padding-top:84px}
     <div class="container">
       <div class="label">Full Rankings</div>
       <h2 class="title">All Institutions</h2>
-      <p class="subtitle">Scores computed using a weighted formula: Responsiveness (40%) + Service Quality (40%) + Public Satisfaction (20%).</p>
+      <p class="subtitle">Scores computed using a weighted formula: Responsiveness (40%) + Service Quality (40%) + Public Satisfaction (20%). Scores are published only for institutions with enough verified ratings.</p>
       <!-- Tier legend -->
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:24px 0">
+      <div id="rk-legend" style="display:none;gap:10px;flex-wrap:wrap;margin:24px 0">
         <span class="tier-pill tier-Gold">Gold: 90–100</span>
         <span class="tier-pill tier-Silver">Silver: 75–89</span>
         <span class="tier-pill tier-Bronze">Bronze: 60–74</span>
         <span class="tier-pill tier-Red">Red: 40–59</span>
         <span class="tier-pill tier-Critical">Critical: 0–39</span>
       </div>
-      <div class="rank-cards" id="full-rankings">
+      <select id="rk-cat" class="rk-cat" onchange="renderRank()" style="display:none"></select>
+      <div class="lb" id="full-rankings">
         <div style="grid-column:1/-1;text-align:center;padding:64px;color:var(--muted)">
           <div style="font-size:48px;margin-bottom:16px"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div>
           <p style="font-size:16px;margin-bottom:20px">No ratings yet. Be the first to submit — it takes 60 seconds.</p>
@@ -825,18 +838,6 @@ html{scroll-padding-top:84px}
       <div class="team-grid" style="grid-template-columns:repeat(2,1fr)"><div class="team-card"><div class="team-body"><div class="team-name">Leadership</div><div class="team-role">Betterway Group LBG · MYD Ghana</div><div class="team-bio">Founder &amp; Executive Director. Full profiles are published here before our first national report.</div></div></div><div class="team-card"><div class="team-body"><div class="team-name">Youth Field Network</div><div class="team-role">Recruiting</div><div class="team-bio">Trained volunteers collecting structured surveys. Apply through the contact page.</div></div></div></div><p style="text-align:center;margin-top:28px;font-size:14px;color:var(--muted)">Want to join the GPSSI team? <button onclick="goTo('contact')" style="background:none;border:none;cursor:pointer;color:var(--green);font-weight:700;font-size:14px">Get in touch →</button></p>
     </div>
   </div>
-  <!-- Partners -->
-  <div class="section section-alt">
-    <div class="container">
-      <div class="label">Our Network</div>
-      <h2 class="title">Partners & Allies</h2>
-      <p class="subtitle">We are building partnerships with civil society, universities, youth networks and media. Interested? Get in touch.</p>
-      <div class="partners-wrap" style="margin-top:36px">
-        
-      </div>
-      <p style="margin-top:28px;font-size:14px;color:var(--muted)">Interested in partnering with GPSSI? <button onclick="goTo('contact')" style="background:none;border:none;cursor:pointer;color:var(--green);font-weight:700;font-size:14px">Contact us →</button></p>
-    </div>
-  </div>
 </div><!-- /page-about -->
 
 <!-- ════════════════════════════════════════════════════ -->
@@ -892,20 +893,10 @@ html{scroll-padding-top:84px}
   <div class="section">
     <div class="container">
       <div class="label">Open Data</div>
-      <h2 class="title">Download Our Data</h2>
-      <p class="subtitle">All GPSSI datasets are freely available for independent research, journalism, and policy analysis.</p>
-      <div class="data-portal">
-        <div>
-          <div class="dp-title">Open Data Portal</div>
-          <div class="dp-text">All GPSSI datasets are freely available. Use them for research, journalism, policy analysis, or to verify our rankings independently. Data is provided under a Creative Commons Attribution licence — please cite GPSSI / MYD Ghana.</div>
-          <div class="dp-text" style="font-size:12px;color:rgba(255,255,255,.35)">By downloading, you agree to attribute GPSSI / MYD Ghana in any published analysis or reporting.</div>
-        </div>
-        <div class="dp-links">
-          <a href="/api/stats" class="dp-link"><div class="dp-link-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div><div><div class="dp-link-title">Institution scores — JSON</div><div class="dp-link-sub">Live aggregated scores and sample sizes</div></div></a>
-          
-          
-        </div>
-      </div>
+      <h2 class="title">Open Data</h2>
+      <p class="subtitle">Institution-level scores for researchers and journalists. We never publish individual ratings or phone numbers.</p>
+      <div class="data-portal"><div><div class="dp-title">What we publish</div><div class="dp-text">Aggregated scores for each ranked institution: number of ratings, the three component scores, the overall score and the tier. Individual ratings, phone numbers and complaint details are never published. Provided under a Creative Commons Attribution licence. Please cite GPSSI / MYD Ghana.</div><div class="dp-text" style="font-size:12px;color:rgba(255,255,255,.35)">An institution appears in the file only after it reaches the minimum number of verified ratings.</div></div>
+<div class="dp-links"><a id="dl-csv" class="dp-link off" href="/api/public/scores.csv"><div class="dp-link-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div><div><div class="dp-link-title">Institution scores (CSV)</div><div class="dp-link-sub" id="dl-csv-sub">Opens when the first institutions are ranked</div></div></a><button class="dp-link" style="width:100%;text-align:left;cursor:pointer;font-family:inherit" onclick="contactFor('Research Collaboration')"><div class="dp-link-icon"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg></div><div><div class="dp-link-title">Request data for research</div><div class="dp-link-sub">Tell us what you need and how you will use it</div></div></button></div></div>
     </div>
   </div>
 </div><!-- /page-reports -->
@@ -1105,6 +1096,16 @@ function closeModal(){window.wzReset&&wzReset();$('rating-modal').classList.remo
 $('rating-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
 const TC={Gold:'#006B3C',Silver:'#4B9CD3',Bronze:'#CD6C2A',Red:'#E63946',Critical:'#7C3AED'},TE={Gold:'',Silver:'',Bronze:'',Red:'',Critical:''};
 const card=x=>`<div class="rank-card"><div class="rank-card-head"><div><div class="rank-card-name">${esc(x.name)}</div><div class="rank-card-cat">Based on ${x.n} ratings</div></div><span class="tier-pill tier-${x.tier}">${x.tier}</span></div><div class="rank-card-body"><span class="rank-score-big">${x.score}</span><span class="rank-score-max">/100</span><div class="score-bars">${[['Responsiveness',x.r],['Service quality',x.q],['Satisfaction',x.s]].map(([l,v])=>`<div class="sbar-row"><div class="sbar-top"><span class="sbar-lbl">${l}</span><span class="sbar-val">${v}</span></div><div class="sbar-track"><div class="sbar-fill" style="width:${v}%;background:${TC[x.tier]}"></div></div></div>`).join('')}</div></div></div>`;
+const SHOW_MIN=100;let LAST=null,CAT={};
+const lbRow=(x,i)=>`<div class="lb-row"><span class="lb-rk">${i+1}</span><div class="lb-main"><div class="lb-name">${esc(x.name)}</div><div class="lb-meta">${esc(CAT[x.name]||'')} · ${x.n} ratings</div><div class="lb-bar"><i style="width:${x.score}%;background:${TC[x.tier]}"></i></div><div class="lb-sub">Responsiveness ${x.r} · Service quality ${x.q} · Satisfaction ${x.s}</div></div><div class="lb-score"><b>${x.score}</b><span class="tier-pill tier-${x.tier}">${x.tier}</span></div></div>`;
+function renderRank(){if(!LAST)return;const{rk,co,min}=LAST,sel=$('rk-cat'),cats=[...new Set(rk.map(x=>CAT[x.name]).filter(Boolean))];
+if(sel){const v=sel.value;sel.innerHTML='<option value="">All categories</option>'+cats.map(c=>'<option>'+esc(c)+'</option>').join('');sel.value=cats.includes(v)?v:'';sel.style.display=cats.length>1?'':'none'}
+$('rk-legend').style.display=rk.length?'flex':'none';
+const c=sel?sel.value:'',list=rk.filter(x=>!c||CAT[x.name]===c),hint=Math.max(5,Math.ceil(min/5)),near=co.filter(x=>x.n>=hint).slice(0,10);let h='';
+if(list.length)h+=list.map(lbRow).join('');else if(rk.length)h+='<div class="lb-empty">No ranked institutions in this category yet.</div>';
+else h+=`<div class="lb-empty"><div class="lb-empty-ic"><svg class="ic"><use href="#i-clipboard-list"/></svg></div><h3>Rankings open soon</h3><p>To keep every score reliable, an institution is ranked only after ${min} verified ratings. Nothing is published before that.</p><button class="btn btn-green" onclick="goTo('rate')">Rate an institution</button></div>`;
+if(near.length)h+='<div class="lb-coll"><h3>On the way to being ranked</h3><p>Ranked at '+min+' verified ratings.</p>'+near.map(x=>`<div class="pg2"><span>${esc(x.name)}</span><div class="pbar"><i style="width:${Math.min(100,x.n/min*100)}%"></i></div><b>${x.n}/${min}</b></div>`).join('')+'</div>';
+$('full-rankings').innerHTML=h}
 const side=(x,i)=>`<div class="sr"><span class="sr-n">${i+1}</span><span class="sr-t">${esc(x.name)}</span><b style="color:${TC[x.tier]}">${x.score}</b></div>`;
 async function load(){try{const d=await (await fetch('/api/stats')).json(),rk=d.institutions.filter(x=>x.ranked).sort((a,b)=>b.score-a.score),co=d.institutions.filter(x=>!x.ranked).sort((a,b)=>b.n-a.n);
 const avg=rk.length?(rk.reduce((a,x)=>a+x.score,0)/rk.length).toFixed(1):'—';
@@ -1112,7 +1113,7 @@ const avg=rk.length?(rk.reduce((a,x)=>a+x.score,0)/rk.length).toFixed(1):'—';
 ['hs-inst','lb-inst','rp-inst'].forEach(i=>$(i)&&($(i).textContent=d.institutions.length));['lb-comp','rp-comp'].forEach(i=>$(i)&&($(i).textContent=d.complaints));
 const empty='<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted)">No institution has reached '+d.min+' ratings yet. Be among the first to rate.</div>';
 $('home-rankings').innerHTML=rk.length?rk.slice(0,5).map(side).join(''):'<div class="sr-empty">No institution has reached '+d.min+' ratings yet. Be among the first to rate.</div>';
-$('full-rankings').innerHTML=(rk.length?rk.map(card).join(''):empty)+(co.length?'<div style="grid-column:1/-1;margin-top:16px"><h3>Collecting ratings (needs '+d.min+' to be ranked)</h3>'+co.map(x=>'<div style="padding:6px 0;border-bottom:1px solid var(--border)">'+esc(x.name)+' — '+x.n+' of '+d.min+'</div>').join('')+'</div>':'')}catch{}}
+LAST={rk,co,min:d.min};renderRank();document.body.classList.toggle('pilot',d.total<SHOW_MIN);const dl=$('dl-csv');if(dl){dl.classList.toggle('off',!rk.length);$('dl-csv-sub').textContent=rk.length?rk.length+' ranked institutions, updated live':'Opens when the first institutions are ranked'}}catch{}}
 let NAMES=new Set();
 function combo(inp,cats){const box=document.createElement('div');box.className='cb-list';inp.parentNode.appendChild(box);
 const show=()=>{const q=inp.value.toLowerCase().trim();let h='';for(const[c,l]of Object.entries(cats)){const m=l.filter(n=>n.toLowerCase().includes(q));if(m.length)h+='<div class="cb-cat">'+esc(c)+'</div>'+m.map(n=>'<div class="cb-item" data-n="'+esc(n)+'">'+esc(n)+'</div>').join('')}box.innerHTML=h||'<div class="cb-cat">No match - check spelling</div>';box.style.display='block'};
@@ -1121,7 +1122,7 @@ box.addEventListener('click',e=>{const t=e.target.closest('.cb-item');if(t){inp.
 inp.addEventListener('blur',()=>setTimeout(()=>{box.style.display='none';if(!NAMES.has(inp.value))inp.value=''},250))}
 async function sendCode(){const d=await post('/api/otp/send',{phone:$('f-phone').value});alert(d.ok?'Code sent. Check your SMS.':d.error)}
 function contactFor(r){goTo('contact');$('c-reason').value=r;setTimeout(()=>$('c-name').focus(),150)}
-(async()=>{try{const d=await (await fetch('/api/institutions')).json();NAMES=new Set(Object.values(d.categories).flat());combo($('f-inst'),d.categories);combo($('cp-inst'),d.categories);if(d.otp&&!sessionStorage.gt)$('otp-row').style.display='block'}catch{}})();
+(async()=>{try{const d=await (await fetch('/api/institutions')).json();NAMES=new Set(Object.values(d.categories).flat());for(const[c,l]of Object.entries(d.categories))l.forEach(n=>CAT[n]=c);combo($('f-inst'),d.categories);combo($('cp-inst'),d.categories);if(d.otp&&!sessionStorage.gt)$('otp-row').style.display='block'}catch{}})();
 $('cp-date').valueAsDate=new Date();load();setInterval(load,30000);
 
 (function(){const card=document.querySelector('#rate-anchor .form-card'),gs=[...card.querySelectorAll('.form-group')],mq=matchMedia('(max-width:1099px)'),N=gs.length;let i=0;
