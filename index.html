@@ -452,13 +452,42 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 .cb{position:relative}.cb-list{display:none;position:absolute;z-index:50;left:0;right:0;top:100%;max-height:260px;overflow:auto;background:#fff;border:1.5px solid var(--green);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15)}.cb-cat{padding:6px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);background:var(--off)}.cb-item{padding:10px 12px;font-size:14px;cursor:pointer}.cb-item:hover{background:var(--green-light)}
+
+/* ─── REFRESH LAYER ──────────────────────────────────── */
+.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex-shrink:0}
+body{-webkit-font-smoothing:antialiased}
+h1,h2,h3{letter-spacing:-.015em}
+:focus-visible{outline:3px solid rgba(0,107,60,.4);outline-offset:2px}
+.nav{box-shadow:none}
+.btn,.nav-cta,.form-btn,.c-submit,.dl-btn{border-radius:10px}
+.card,.rank-card,.val-card,.sc-card,.engage-card,.stat-card,.contact-card,.c-info,.team-card{border-radius:16px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.05)}
+.rank-card:hover,.val-card:hover,.sc-card:hover,.engage-card:hover,.stat-card:hover,.contact-card:hover,.team-card:hover{border-color:rgba(0,107,60,.35)}
+.step-icon,.val-icon,.engage-icon,.sc-icon,.mv-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:var(--green-light);color:var(--green);font-size:24px}
+.engage-icon,.sc-icon{margin-left:auto;margin-right:auto}
+.mv-icon{background:rgba(252,209,22,.12);color:var(--gold)}
+.info-icon-box{color:var(--gold);font-size:22px}
+.stat-icon{color:var(--green);font-size:24px}
+.cc-icon{color:var(--green-dark);font-size:22px}
+.dp-link-icon{color:var(--gold);font-size:22px}
+.ticker-item .ic{color:var(--green-dark)}
+[style*="font-size:28px"]>.ic{box-sizing:content-box;padding:12px;border-radius:12px;background:var(--green-light);color:var(--green)}
+.success-icon,.modal-icon{display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:var(--green-light);color:var(--green);margin:0 auto 18px;font-size:34px}
+.modal-close{display:flex;padding:6px;border-radius:8px}.modal-close:hover{background:var(--off)}
+.nav-mobile-toggle{font-size:26px;color:var(--dark);padding:6px}
+.tier-pill::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px;vertical-align:1px}
+.pd{display:block;width:12px;height:12px;border-radius:50%;background:currentColor;margin:4px auto}
+.prio-opt.sel .prio-icon{color:#fff}
+.star{display:inline-block}.star:hover{transform:scale(1.15)}
+@media(max-width:960px){.nav-links.open{display:flex;position:absolute;top:68px;left:0;right:0;flex-direction:column;background:#fff;padding:12px 20px;border-bottom:1px solid var(--border);box-shadow:var(--shadow-md)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="i-building-2" viewBox="0 0 24 24"><path d="M10 12h4" /> <path d="M10 8h4" /> <path d="M14 21v-3a2 2 0 0 0-4 0v3" /> <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /> <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></symbol><symbol id="i-bus" viewBox="0 0 24 24"><path d="M8 6v6" /> <path d="M15 6v6" /> <path d="M2 12h19.6" /> <path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" /> <circle cx="7" cy="18" r="2" /> <path d="M9 18h5" /> <circle cx="16" cy="18" r="2" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="m16 9-5.5 5.5L8 12" /></symbol><symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /> <path d="M12 11h4" /> <path d="M12 16h4" /> <path d="M8 11h.01" /> <path d="M8 16h.01" /></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /> <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /> <path d="M2 12h20" /></symbol><symbol id="i-graduation-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /> <path d="M22 10v6" /> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></symbol><symbol id="i-hand-coins" viewBox="0 0 24 24"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17" /> <path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /> <path d="m2 16 6 6" /> <circle cx="16" cy="9" r="2.9" /> <circle cx="6" cy="5" r="3" /></symbol><symbol id="i-handshake" viewBox="0 0 24 24"><path d="m11 17 2 2a1 1 0 1 0 3-3" /> <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" /> <path d="m21 3 1 11h-2" /> <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" /> <path d="M3 4h8" /></symbol><symbol id="i-hospital" viewBox="0 0 24 24"><path d="M12 7v4" /> <path d="M14 21v-3a2 2 0 0 0-4 0v3" /> <path d="M14 9h-4" /> <path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2" /> <path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16" /></symbol><symbol id="i-landmark" viewBox="0 0 24 24"><path d="M10 18v-7" /> <path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z" /> <path d="M14 18v-7" /> <path d="M18 18v-7" /> <path d="M3 22h18" /> <path d="M6 18v-7" /></symbol><symbol id="i-lightbulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /> <path d="M9 18h6" /> <path d="M10 22h4" /></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" /></symbol><symbol id="i-mail" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /> <rect x="2" y="4" width="20" height="16" rx="2" /></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /> <path d="M15 5.764v15" /> <path d="M9 3.236v15" /></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /> <circle cx="12" cy="10" r="3" /></symbol><symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" /> <path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14" /> <path d="M8 6v8" /></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></symbol><symbol id="i-microscope" viewBox="0 0 24 24"><path d="M6 18h8" /> <path d="M3 22h18" /> <path d="M14 22a7 7 0 1 0 0-14h-1" /> <path d="M9 14h2" /> <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" /> <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" /></symbol><symbol id="i-newspaper" viewBox="0 0 24 24"><path d="M15 18h-5" /> <path d="M18 14h-8" /> <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2" /> <rect width="8" height="4" x="10" y="6" rx="1" /></symbol><symbol id="i-pen-line" viewBox="0 0 24 24"><path d="M13 21h8" /> <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /></symbol><symbol id="i-phone-call" viewBox="0 0 24 24"><path d="M13 2a9 9 0 0 1 9 9" /> <path d="M13 6a5 5 0 0 1 5 5" /> <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" /></symbol><symbol id="i-radio-tower" viewBox="0 0 24 24"><path d="M4.9 16.1C1 12.2 1 5.8 4.9 1.9" /> <path d="M7.8 4.7a6.14 6.14 0 0 0-.8 7.5" /> <circle cx="12" cy="9" r="2" /> <path d="M16.2 4.8c2 2 2.26 5.11.8 7.47" /> <path d="M19.1 1.9a9.96 9.96 0 0 1 0 14.1" /> <path d="M9.5 18h5" /> <path d="m8 22 4-11 4 11" /></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /> <path d="M21 3v5h-5" /> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /> <path d="M8 16H3v5" /></symbol><symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18" /> <path d="m19 8 3 8a5 5 0 0 1-6 0zV7" /> <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" /> <path d="m5 8 3 8a5 5 0 0 1-6 0zV7" /> <path d="M7 21h10" /></symbol><symbol id="i-scan-eye" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2" /> <path d="M17 3h2a2 2 0 0 1 2 2v2" /> <path d="M21 17v2a2 2 0 0 1-2 2h-2" /> <path d="M7 21H5a2 2 0 0 1-2-2v-2" /> <circle cx="12" cy="12" r="1" /> <path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0" /></symbol><symbol id="i-smartphone" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /> <path d="M12 18h.01" /></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <circle cx="12" cy="12" r="6" /> <circle cx="12" cy="12" r="2" /></symbol><symbol id="i-trending-up" viewBox="0 0 24 24"><path d="M16 7h6v6" /> <path d="m22 7-8.5 8.5-5-5L2 17" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2" /> <path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2" /> <path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3" /> <path d="M4 22h16" /> <path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z" /> <path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3" /></symbol><symbol id="i-tv" viewBox="0 0 24 24"><path d="m17 2-5 5-5-5" /> <rect width="20" height="15" x="2" y="7" rx="2" /></symbol><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></symbol><symbol id="i-vote" viewBox="0 0 24 24"><path d="m9 12 2 2 4-4" /> <path d="M5 7c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2v12H5V7Z" /> <path d="M22 19H2" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol><symbol id="i-zap" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></symbol></defs></svg>
 
 <!-- TOP BAR -->
 <div class="topbar">
-  <span>📞 Hotline: <a href="tel:+233249869296">024 986 9296</a> &nbsp;|&nbsp; <a href="mailto:myd.ghana@gmail.com">myd.ghana@gmail.com</a></span>
+  <span><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> Hotline: <a href="tel:+233249869296">024 986 9296</a> &nbsp;|&nbsp; <a href="mailto:myd.ghana@gmail.com">myd.ghana@gmail.com</a></span>
   <span>🇬🇭 Movement for Youth Development (MYD) Ghana</span>
 </div>
 
@@ -480,7 +509,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
     <li><button onclick="goTo('complaints')" id="nav-complaints">File Complaint</button></li>
   </ul>
   <button class="nav-cta" onclick="goTo('rate')">Submit Rating</button>
-  <button class="nav-mobile-toggle" onclick="alert('Menu: Home | Rankings | About | Reports | Contact | Complaints')">☰</button>
+  <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')"><svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </nav>
 
 <!-- ════════════════════════════════════════════════════ -->
@@ -497,7 +526,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <h1>Ghana's Public Services,<br><em>Measured. Ranked.<br>Accountable.</em></h1>
       <p class="hero-sub">Ghana's first independent, youth-powered citizen satisfaction index — turning the everyday experiences of millions into hard data that holds institutions accountable.</p>
       <div class="hero-btns">
-        <button class="btn btn-gold" onclick="goTo('rate')">📝 Submit Your Rating</button>
+        <button class="btn btn-gold" onclick="goTo('rate')"><svg class="ic" aria-hidden="true"><use href="#i-pen-line"/></svg> Submit Your Rating</button>
         <button class="btn btn-outline-white" onclick="goTo('rankings')">View Live Rankings →</button>
       </div>
     </div>
@@ -510,7 +539,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
 
   <!-- TICKER -->
   <div class="ticker">
-    <div class="ticker-inner" id="ticker"><span class="ticker-item">⭐ Rate any of 98 public institutions <span class="ticker-sep">◆</span></span><span class="ticker-item">📞 Hotline: 024 986 9296 <span class="ticker-sep">◆</span></span><span class="ticker-item">🇬🇭 Open to citizens in all 16 regions <span class="ticker-sep">◆</span></span><span class="ticker-item">🗳️ Every rating counts toward the ranking <span class="ticker-sep">◆</span></span><span class="ticker-item">⭐ Rate any of 98 public institutions <span class="ticker-sep">◆</span></span><span class="ticker-item">📞 Hotline: 024 986 9296 <span class="ticker-sep">◆</span></span><span class="ticker-item">🇬🇭 Open to citizens in all 16 regions <span class="ticker-sep">◆</span></span><span class="ticker-item">🗳️ Every rating counts toward the ranking <span class="ticker-sep">◆</span></span></div>
+    <div class="ticker-inner" id="ticker"><span class="ticker-item"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg> Rate any of 98 public institutions <span class="ticker-sep">◆</span></span><span class="ticker-item"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> Hotline: 024 986 9296 <span class="ticker-sep">◆</span></span><span class="ticker-item">🇬🇭 Open to citizens in all 16 regions <span class="ticker-sep">◆</span></span><span class="ticker-item"><svg class="ic" aria-hidden="true"><use href="#i-vote"/></svg> Every rating counts toward the ranking <span class="ticker-sep">◆</span></span><span class="ticker-item"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg> Rate any of 98 public institutions <span class="ticker-sep">◆</span></span><span class="ticker-item"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> Hotline: 024 986 9296 <span class="ticker-sep">◆</span></span><span class="ticker-item">🇬🇭 Open to citizens in all 16 regions <span class="ticker-sep">◆</span></span><span class="ticker-item"><svg class="ic" aria-hidden="true"><use href="#i-vote"/></svg> Every rating counts toward the ranking <span class="ticker-sep">◆</span></span></div>
   </div>
 
   <!-- LIVE BAR -->
@@ -529,11 +558,11 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <h2 class="title">From Citizen Experience<br>to National Accountability</h2>
       <p class="subtitle">Five steps that convert everyday service experiences into rankings powerful enough to move institutions.</p>
       <div class="steps">
-        <div class="step"><div class="step-num">01</div><div class="step-icon">📱</div><h3>Citizens Rate Services</h3><p>Via website, mobile, or our toll-free hotline — any Ghanaian can rate a public institution and share their experience.</p></div>
-        <div class="step"><div class="step-num">02</div><div class="step-icon">🧑‍🎓</div><h3>Youth Teams Collect Data</h3><p>Youth field teams trained by us conduct in-person surveys and service-quality checks.</p></div>
-        <div class="step"><div class="step-num">03</div><div class="step-icon">🔬</div><h3>Independent Analysis</h3><p>Our technical team applies a transparent, weighted scoring methodology, published openly on our Methodology page.</p></div>
-        <div class="step"><div class="step-num">04</div><div class="step-icon">📊</div><h3>Rankings Published</h3><p>Annual national report and rankings released at a press conference, briefing Parliament, ministries, media, and development partners.</p></div>
-        <div class="step"><div class="step-num">05</div><div class="step-icon">🔄</div><h3>Institutions Improve</h3><p>Media scrutiny, parliamentary questions, and public pressure drive institutions to reform. Standards rise. The cycle repeats.</p></div>
+        <div class="step"><div class="step-num">01</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-smartphone"/></svg></div><h3>Citizens Rate Services</h3><p>Via website, mobile, or our toll-free hotline — any Ghanaian can rate a public institution and share their experience.</p></div>
+        <div class="step"><div class="step-num">02</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-graduation-cap"/></svg></div><h3>Youth Teams Collect Data</h3><p>Youth field teams trained by us conduct in-person surveys and service-quality checks.</p></div>
+        <div class="step"><div class="step-num">03</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-microscope"/></svg></div><h3>Independent Analysis</h3><p>Our technical team applies a transparent, weighted scoring methodology, published openly on our Methodology page.</p></div>
+        <div class="step"><div class="step-num">04</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div><h3>Rankings Published</h3><p>Annual national report and rankings released at a press conference, briefing Parliament, ministries, media, and development partners.</p></div>
+        <div class="step"><div class="step-num">05</div><div class="step-icon"><svg class="ic" aria-hidden="true"><use href="#i-refresh-cw"/></svg></div><h3>Institutions Improve</h3><p>Media scrutiny, parliamentary questions, and public pressure drive institutions to reform. Standards rise. The cycle repeats.</p></div>
       </div>
     </div>
   </div>
@@ -546,7 +575,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <p class="subtitle">Rankings update live as citizen submissions come in. The more people rate, the more accurate the picture.</p>
       <div class="rank-cards" id="home-rankings">
         <div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted)">
-          <div style="font-size:42px;margin-bottom:12px">📊</div>
+          <div style="font-size:42px;margin-bottom:12px"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div>
           <div style="font-size:15px">Submit ratings to populate live rankings.</div>
           <button class="btn btn-green" style="margin-top:20px" onclick="goTo('rate')">Be the First to Rate →</button>
         </div>
@@ -562,32 +591,32 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <h2 class="title title-light" style="margin-bottom:48px">Five Ways Rankings<br>Create Real Change</h2>
       <div class="grid-3" style="gap:20px">
         <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:32px 24px">
-          <div style="font-size:28px;margin-bottom:14px">📡</div>
+          <div style="font-size:28px;margin-bottom:14px"><svg class="ic" aria-hidden="true"><use href="#i-radio-tower"/></svg></div>
           <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Public Visibility</h3>
           <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.65">Red and Critical tier institutions are amplified by media. There is no hiding from a published ranking that citizens can see and share.</p>
         </div>
         <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:32px 24px">
-          <div style="font-size:28px;margin-bottom:14px">🏛️</div>
+          <div style="font-size:28px;margin-bottom:14px"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg></div>
           <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Political Pressure</h3>
           <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.65">Ministers, boards, and CEOs respond to public embarrassment. Parliamentary committees can use GPSSI data for scrutiny and accountability.</p>
         </div>
         <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:32px 24px">
-          <div style="font-size:28px;margin-bottom:14px">🏆</div>
+          <div style="font-size:28px;margin-bottom:14px"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg></div>
           <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Healthy Competition</h3>
           <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.65">When ECG is ranked against GWCL, or GCB against ADB, institutions compete to improve. Gold Tier becomes a prize worth chasing.</p>
         </div>
         <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:32px 24px">
-          <div style="font-size:28px;margin-bottom:14px">🪞</div>
+          <div style="font-size:28px;margin-bottom:14px"><svg class="ic" aria-hidden="true"><use href="#i-scan-eye"/></svg></div>
           <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Reputation Management</h3>
           <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.65">Institutions care about how citizens perceive them. Critical tier status creates internal urgency to reform — before the next rating cycle.</p>
         </div>
         <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:32px 24px">
-          <div style="font-size:28px;margin-bottom:14px">👥</div>
+          <div style="font-size:28px;margin-bottom:14px"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg></div>
           <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Citizen Empowerment</h3>
           <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.65">When citizens see their feedback trigger rankings, press coverage, and reforms, participation grows. The accountability loop strengthens.</p>
         </div>
         <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:32px 24px">
-          <div style="font-size:28px;margin-bottom:14px">📈</div>
+          <div style="font-size:28px;margin-bottom:14px"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg></div>
           <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px">Evidence-Based Reform</h3>
           <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.65">GPSSI gives government, Parliament, and donors the independent data they need to design targeted service delivery reforms.</p>
         </div>
@@ -603,20 +632,20 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <p class="subtitle subtitle-light">Every rating directly influences Ghana's national institutional rankings. Your voice creates accountability.</p>
       <div class="rate-grid">
         <div class="form-card">
-          <div class="form-title">⭐ Rate a Public Service</div>
+          <div class="form-title"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg> Rate a Public Service</div>
           <div class="form-group"><label>Institution *</label><div class="cb"><input id="f-inst" placeholder="Tap and type: ECG, DVLA, Korle Bu..." autocomplete="off"></div><div class="star-label"></div></div><div class="form-group"><label>Your Region *</label><select id="f-region"><option value="">— Select Region —</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Western North</option><option>Central</option><option>Eastern</option><option>Volta</option><option>Oti</option><option>Northern</option><option>Savannah</option><option>North East</option><option>Upper East</option><option>Upper West</option><option>Bono</option><option>Bono East</option><option>Ahafo</option></select><div class="star-label"></div></div><div class="form-group"><label>How were you treated? *</label><div class="stars-row" data-k="r"><span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span></div><div class="star-label">Speed, courtesy, clear answers</div></div><div class="form-group"><label>How good was the service itself? *</label><div class="stars-row" data-k="q"><span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span></div><div class="star-label">Accuracy, waiting time, cleanliness, fairness</div></div><div class="form-group"><label>Overall satisfaction *</label><div class="stars-row" data-k="s"><span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span></div><div class="star-label"></div></div><div class="form-group"><label>Your Mobile Number *</label><input id="f-phone" type="tel" inputmode="tel" placeholder="024 000 0000"><div class="star-label">One rating per institution per number. Never shown or shared.</div><div id="otp-row" style="display:none;margin-top:10px"><button type="button" class="engage-link" onclick="sendCode()">Send verification code by SMS</button><input id="f-code" inputmode="numeric" maxlength="8" placeholder="Enter the code from your SMS" style="margin-top:8px"></div></div><input id="f-hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px"><div class="form-group">
             <label>Describe Your Experience (optional)</label>
             <textarea id="f-feedback" placeholder="What happened? Be specific — your feedback drives accountability..."></textarea>
           </div>
           <button class="form-btn" id="home-submit-btn" onclick="submitRating()">Submit Rating →</button>
-          <p class="form-note">🔒 Your number is stored as a one-way code and never shown or shared.</p>
+          <p class="form-note"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg> Your number is stored as a one-way code and never shown or shared.</p>
         </div>
         <div class="rate-info">
-          <div class="info-feat"><div class="info-icon-box">🔒</div><div><h4>Your Identity is Protected</h4><p>Your phone number is used only to stop duplicate ratings. It is stored as a one-way code, never shown, never shared with institutions.</p></div></div>
-          <div class="info-feat"><div class="info-icon-box">📊</div><div><h4>Your Data Drives Rankings</h4><p>Each submission updates the composite score for that institution. Enough responses can change a tier — and trigger national media attention.</p></div></div>
-          <div class="info-feat"><div class="info-icon-box">⚡</div><div><h4>Urgent Complaints Fast-Tracked</h4><p>Critical complaints involving rights violations or safety failures are escalated immediately to relevant oversight bodies.</p></div></div>
+          <div class="info-feat"><div class="info-icon-box"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg></div><div><h4>Your Identity is Protected</h4><p>Your phone number is used only to stop duplicate ratings. It is stored as a one-way code, never shown, never shared with institutions.</p></div></div>
+          <div class="info-feat"><div class="info-icon-box"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div><div><h4>Your Data Drives Rankings</h4><p>Each submission updates the composite score for that institution. Enough responses can change a tier — and trigger national media attention.</p></div></div>
+          <div class="info-feat"><div class="info-icon-box"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg></div><div><h4>Urgent Complaints Fast-Tracked</h4><p>Critical complaints involving rights violations or safety failures are escalated immediately to relevant oversight bodies.</p></div></div>
           <div class="hotline-box">
-            <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:8px">📞 Prefer to call?</div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:8px"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> Prefer to call?</div>
             <div class="hotline-num">024 986 9296</div>
             <div class="hotline-lbl">Call · Mon–Fri, 8am–5pm</div>
           </div>
@@ -667,15 +696,15 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <p class="subtitle">Scores computed using a weighted formula: Responsiveness (40%) + Service Quality (40%) + Public Satisfaction (20%).</p>
       <!-- Tier legend -->
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin:24px 0">
-        <span class="tier-pill tier-Gold">🥇 Gold: 90–100</span>
-        <span class="tier-pill tier-Silver">🥈 Silver: 75–89</span>
-        <span class="tier-pill tier-Bronze">🥉 Bronze: 60–74</span>
-        <span class="tier-pill tier-Red">🔴 Red: 40–59</span>
-        <span class="tier-pill tier-Critical">🟣 Critical: 0–39</span>
+        <span class="tier-pill tier-Gold">Gold: 90–100</span>
+        <span class="tier-pill tier-Silver">Silver: 75–89</span>
+        <span class="tier-pill tier-Bronze">Bronze: 60–74</span>
+        <span class="tier-pill tier-Red">Red: 40–59</span>
+        <span class="tier-pill tier-Critical">Critical: 0–39</span>
       </div>
       <div class="rank-cards" id="full-rankings">
         <div style="grid-column:1/-1;text-align:center;padding:64px;color:var(--muted)">
-          <div style="font-size:48px;margin-bottom:16px">📊</div>
+          <div style="font-size:48px;margin-bottom:16px"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div>
           <p style="font-size:16px;margin-bottom:20px">No ratings yet. Be the first to submit — it takes 60 seconds.</p>
           <button class="btn btn-green" onclick="goTo('rate')">Submit a Rating →</button>
         </div>
@@ -686,7 +715,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
     <div class="container" style="text-align:center">
       <h2 class="title">Want to improve a ranking?</h2>
       <p class="subtitle" style="margin:0 auto 28px">Every submission counts. The more Ghanaians rate an institution, the more statistically reliable — and publicly credible — its score becomes.</p>
-      <button class="btn btn-green" onclick="goTo('rate')">📝 Submit Your Rating Now</button>
+      <button class="btn btn-green" onclick="goTo('rate')"><svg class="ic" aria-hidden="true"><use href="#i-pen-line"/></svg> Submit Your Rating Now</button>
     </div>
   </div>
 </div><!-- /page-rankings -->
@@ -705,9 +734,9 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
   </div>
   <!-- MV Strip -->
   <div class="mv-strip">
-    <div class="mv-box"><div class="mv-icon">🎯</div><div class="mv-tag">Our Mission</div><div class="mv-text">To empower Ghanaian youth and citizens to collect, analyse, and publish independent satisfaction data on public institutions — generating the pressure and incentives needed for genuine service delivery reform.</div></div>
-    <div class="mv-box"><div class="mv-icon">👁️</div><div class="mv-tag">Our Vision</div><div class="mv-text">A Ghana where every public institution is measured, ranked, and held accountable to the citizens it serves — by citizens themselves.</div></div>
-    <div class="mv-box"><div class="mv-icon">⚖️</div><div class="mv-tag">Our Promise</div><div class="mv-text">Non-partisan. Evidence-based. Youth-led. No political party, assessed institution, or government ministry has any role in our data collection, analysis, or rankings.</div></div>
+    <div class="mv-box"><div class="mv-icon"><svg class="ic" aria-hidden="true"><use href="#i-target"/></svg></div><div class="mv-tag">Our Mission</div><div class="mv-text">To empower Ghanaian youth and citizens to collect, analyse, and publish independent satisfaction data on public institutions — generating the pressure and incentives needed for genuine service delivery reform.</div></div>
+    <div class="mv-box"><div class="mv-icon"><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg></div><div class="mv-tag">Our Vision</div><div class="mv-text">A Ghana where every public institution is measured, ranked, and held accountable to the citizens it serves — by citizens themselves.</div></div>
+    <div class="mv-box"><div class="mv-icon"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></div><div class="mv-tag">Our Promise</div><div class="mv-text">Non-partisan. Evidence-based. Youth-led. No political party, assessed institution, or government ministry has any role in our data collection, analysis, or rankings.</div></div>
   </div>
   <!-- Story -->
   <div class="section">
@@ -722,10 +751,10 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
           <p style="font-size:15px;color:var(--text);line-height:1.8"><strong>We are not here to embarrass institutions. We are here to give them every reason to be excellent.</strong></p>
         </div>
         <div class="stat-cards">
-          <div class="stat-card"><div class="stat-icon">🗺️</div><div><div class="stat-n">16</div><div class="stat-l">Regions open to citizen ratings</div></div></div>
-          <div class="stat-card"><div class="stat-icon">🏛️</div><div><div class="stat-n">98</div><div class="stat-l">Public institutions on our list</div></div></div>
-          <div class="stat-card"><div class="stat-icon">👥</div><div><div class="stat-n">25,000</div><div class="stat-l">Our goal: citizen ratings in the first cycle</div></div></div>
-          <div class="stat-card"><div class="stat-icon">📊</div><div><div class="stat-n">11</div><div class="stat-l">Sectors covered</div></div></div>
+          <div class="stat-card"><div class="stat-icon"><svg class="ic" aria-hidden="true"><use href="#i-map"/></svg></div><div><div class="stat-n">16</div><div class="stat-l">Regions open to citizen ratings</div></div></div>
+          <div class="stat-card"><div class="stat-icon"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg></div><div><div class="stat-n">98</div><div class="stat-l">Public institutions on our list</div></div></div>
+          <div class="stat-card"><div class="stat-icon"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg></div><div><div class="stat-n">25,000</div><div class="stat-l">Our goal: citizen ratings in the first cycle</div></div></div>
+          <div class="stat-card"><div class="stat-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div><div><div class="stat-n">11</div><div class="stat-l">Sectors covered</div></div></div>
         </div>
       </div>
     </div>
@@ -737,12 +766,12 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <h2 class="title">Our Core Values</h2>
       <p class="subtitle">Six principles that guide everything GPSSI does.</p>
       <div class="val-grid">
-        <div class="val-card"><div class="val-n">01</div><div class="val-icon">🎯</div><h3>Independence</h3><p>No government agency, political party, or assessed institution has any role in our data collection, analysis, or scoring decisions.</p></div>
-        <div class="val-card"><div class="val-n">02</div><div class="val-icon">🔬</div><h3>Transparency</h3><p>All methodology, scoring criteria, and summary data are publicly disclosed. Our rankings are reproducible by anyone with the same data.</p></div>
-        <div class="val-card"><div class="val-n">03</div><div class="val-icon">🤝</div><h3>Youth Agency</h3><p>Young Ghanaians are not just beneficiaries of governance reform — they are its architects. Our youth networks are the backbone of GPSSI.</p></div>
-        <div class="val-card"><div class="val-n">04</div><div class="val-icon">📢</div><h3>Constructive Pressure</h3><p>Rankings are designed to create visibility and incentives that drive genuine improvement — not to shame, but to motivate excellence.</p></div>
-        <div class="val-card"><div class="val-n">05</div><div class="val-icon">🌍</div><h3>Inclusivity</h3><p>From rural villages to urban centres, every Ghanaian's experience counts. Our multi-channel approach reaches citizens who cannot go online.</p></div>
-        <div class="val-card"><div class="val-n">06</div><div class="val-icon">📈</div><h3>Evidence Over Opinion</h3><p>We let data speak. Every ranking, every scorecard, and every recommendation is grounded in evidence from real citizens.</p></div>
+        <div class="val-card"><div class="val-n">01</div><div class="val-icon"><svg class="ic" aria-hidden="true"><use href="#i-target"/></svg></div><h3>Independence</h3><p>No government agency, political party, or assessed institution has any role in our data collection, analysis, or scoring decisions.</p></div>
+        <div class="val-card"><div class="val-n">02</div><div class="val-icon"><svg class="ic" aria-hidden="true"><use href="#i-microscope"/></svg></div><h3>Transparency</h3><p>All methodology, scoring criteria, and summary data are publicly disclosed. Our rankings are reproducible by anyone with the same data.</p></div>
+        <div class="val-card"><div class="val-n">03</div><div class="val-icon"><svg class="ic" aria-hidden="true"><use href="#i-handshake"/></svg></div><h3>Youth Agency</h3><p>Young Ghanaians are not just beneficiaries of governance reform — they are its architects. Our youth networks are the backbone of GPSSI.</p></div>
+        <div class="val-card"><div class="val-n">04</div><div class="val-icon"><svg class="ic" aria-hidden="true"><use href="#i-megaphone"/></svg></div><h3>Constructive Pressure</h3><p>Rankings are designed to create visibility and incentives that drive genuine improvement — not to shame, but to motivate excellence.</p></div>
+        <div class="val-card"><div class="val-n">05</div><div class="val-icon"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div><h3>Inclusivity</h3><p>From rural villages to urban centres, every Ghanaian's experience counts. Our multi-channel approach reaches citizens who cannot go online.</p></div>
+        <div class="val-card"><div class="val-n">06</div><div class="val-icon"><svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg></div><h3>Evidence Over Opinion</h3><p>We let data speak. Every ranking, every scorecard, and every recommendation is grounded in evidence from real citizens.</p></div>
       </div>
     </div>
   </div>
@@ -788,7 +817,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <p class="subtitle">Our flagship publication — ranking Ghana's public institutions using citizen-sourced data, published annually.</p>
       <div class="featured-report">
         <div class="fr-cover">
-          <div><div class="fr-badge">📊 First Edition</div><div class="fr-title">Ghana Public Service Satisfaction Index</div><div class="fr-sub">First National Report — 2027</div></div>
+          <div><div class="fr-badge"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg> First Edition</div><div class="fr-title">Ghana Public Service Satisfaction Index</div><div class="fr-sub">First National Report — 2027</div></div>
           <div class="fr-year">2027</div>
         </div>
         <div class="fr-body">
@@ -808,13 +837,13 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <h2 class="title">Sector Scorecards</h2>
       <p class="subtitle">Individual scorecards for each institutional cluster — designed for media, Parliament, and sector ministries.</p>
       <div class="sc-grid">
-        <div class="sc-card"><div class="sc-icon">🏥</div><div class="sc-title">Social Services</div><div class="sc-desc">Hospitals, schools, ambulance, fire service</div><div class="cs-tag">Coming 2027</div></div>
-        <div class="sc-card"><div class="sc-icon">🏛️</div><div class="sc-title">Admin & Governance</div><div class="sc-desc">Passport, DVLA, GRA, NHIA, Lands</div><div class="cs-tag">Coming 2027</div></div>
-        <div class="sc-card"><div class="sc-icon">⚖️</div><div class="sc-title">Law & Order</div><div class="sc-desc">Police, courts, CHRAJ, Legal Aid</div><div class="cs-tag">Coming 2027</div></div>
-        <div class="sc-card"><div class="sc-icon">💡</div><div class="sc-title">Utilities</div><div class="sc-desc">ECG, GWCL, telecoms</div><div class="cs-tag">Coming 2027</div></div>
-        <div class="sc-card"><div class="sc-icon">🚌</div><div class="sc-title">Transport</div><div class="sc-desc">STC, Metro Mass, airports, ports</div><div class="cs-tag">Coming 2027</div></div>
-        <div class="sc-card"><div class="sc-icon">🏢</div><div class="sc-title">State Enterprises</div><div class="sc-desc">COCOBOD, GNPC, Ghana Post, GOIL</div><div class="cs-tag">Coming 2027</div></div>
-        <div class="sc-card"><div class="sc-icon">📺</div><div class="sc-title">Public Media</div><div class="sc-desc">GBC, ISD, state newspapers</div><div class="cs-tag">Coming 2027</div></div>
+        <div class="sc-card"><div class="sc-icon"><svg class="ic" aria-hidden="true"><use href="#i-hospital"/></svg></div><div class="sc-title">Social Services</div><div class="sc-desc">Hospitals, schools, ambulance, fire service</div><div class="cs-tag">Coming 2027</div></div>
+        <div class="sc-card"><div class="sc-icon"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg></div><div class="sc-title">Admin & Governance</div><div class="sc-desc">Passport, DVLA, GRA, NHIA, Lands</div><div class="cs-tag">Coming 2027</div></div>
+        <div class="sc-card"><div class="sc-icon"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg></div><div class="sc-title">Law & Order</div><div class="sc-desc">Police, courts, CHRAJ, Legal Aid</div><div class="cs-tag">Coming 2027</div></div>
+        <div class="sc-card"><div class="sc-icon"><svg class="ic" aria-hidden="true"><use href="#i-lightbulb"/></svg></div><div class="sc-title">Utilities</div><div class="sc-desc">ECG, GWCL, telecoms</div><div class="cs-tag">Coming 2027</div></div>
+        <div class="sc-card"><div class="sc-icon"><svg class="ic" aria-hidden="true"><use href="#i-bus"/></svg></div><div class="sc-title">Transport</div><div class="sc-desc">STC, Metro Mass, airports, ports</div><div class="cs-tag">Coming 2027</div></div>
+        <div class="sc-card"><div class="sc-icon"><svg class="ic" aria-hidden="true"><use href="#i-building-2"/></svg></div><div class="sc-title">State Enterprises</div><div class="sc-desc">COCOBOD, GNPC, Ghana Post, GOIL</div><div class="cs-tag">Coming 2027</div></div>
+        <div class="sc-card"><div class="sc-icon"><svg class="ic" aria-hidden="true"><use href="#i-tv"/></svg></div><div class="sc-title">Public Media</div><div class="sc-desc">GBC, ISD, state newspapers</div><div class="cs-tag">Coming 2027</div></div>
       </div>
     </div>
   </div>
@@ -831,7 +860,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
           <div class="dp-text" style="font-size:12px;color:rgba(255,255,255,.35)">By downloading, you agree to attribute GPSSI / MYD Ghana in any published analysis or reporting.</div>
         </div>
         <div class="dp-links">
-          <a href="/api/stats" class="dp-link"><div class="dp-link-icon">📊</div><div><div class="dp-link-title">Institution scores — JSON</div><div class="dp-link-sub">Live aggregated scores and sample sizes</div></div></a>
+          <a href="/api/stats" class="dp-link"><div class="dp-link-icon"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg></div><div><div class="dp-link-title">Institution scores — JSON</div><div class="dp-link-sub">Live aggregated scores and sample sizes</div></div></a>
           
           
         </div>
@@ -877,11 +906,11 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
           </div>
         </div>
         <div class="contact-cards" style="padding-top:60px">
-          <div class="contact-card"><div class="cc-icon" style="background:var(--green-light)">📧</div><div><div class="cc-title">Email</div><div class="cc-val"><a href="mailto:myd.ghana@gmail.com">myd.ghana@gmail.com</a><br>We reply within 2 working days.</div></div></div>
-          <div class="contact-card"><div class="cc-icon" style="background:#FEF3C7">📞</div><div><div class="cc-title">Phone & WhatsApp</div><div class="cc-val"><a href="tel:+233246086183">+233 24 608 6183</a><br>Monday – Friday, 8am – 5pm GMT</div></div></div>
-          <div class="contact-card"><div class="cc-icon" style="background:#FEE2E2">☎️</div><div><div class="cc-title">Citizen Hotline</div><div class="cc-val"><a href="tel:+233249869296">024 986 9296</a> <br>Mon–Fri, 8am–5pm</div></div></div>
-          <div class="contact-card"><div class="cc-icon" style="background:var(--green-light)">🌐</div><div><div class="cc-title">Website</div><div class="cc-val"><a href="http://www.mydghana.org" target="_blank">www.mydghana.org</a></div></div></div>
-          <div class="contact-card"><div class="cc-icon" style="background:var(--off)">📍</div><div><div class="cc-title">Location</div><div class="cc-val">Betterway Group LBG · MYD Ghana<br>Accra, Ghana</div></div></div>
+          <div class="contact-card"><div class="cc-icon" style="background:var(--green-light)"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg></div><div><div class="cc-title">Email</div><div class="cc-val"><a href="mailto:myd.ghana@gmail.com">myd.ghana@gmail.com</a><br>We reply within 2 working days.</div></div></div>
+          <div class="contact-card"><div class="cc-icon" style="background:#FEF3C7"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg></div><div><div class="cc-title">Phone & WhatsApp</div><div class="cc-val"><a href="tel:+233246086183">+233 24 608 6183</a><br>Monday – Friday, 8am – 5pm GMT</div></div></div>
+          <div class="contact-card"><div class="cc-icon" style="background:#FEE2E2"><svg class="ic" aria-hidden="true"><use href="#i-phone-call"/></svg></div><div><div class="cc-title">Citizen Hotline</div><div class="cc-val"><a href="tel:+233249869296">024 986 9296</a> <br>Mon–Fri, 8am–5pm</div></div></div>
+          <div class="contact-card"><div class="cc-icon" style="background:var(--green-light)"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg></div><div><div class="cc-title">Website</div><div class="cc-val"><a href="http://www.mydghana.org" target="_blank">www.mydghana.org</a></div></div></div>
+          <div class="contact-card"><div class="cc-icon" style="background:var(--off)"><svg class="ic" aria-hidden="true"><use href="#i-map-pin"/></svg></div><div><div class="cc-title">Location</div><div class="cc-val">Betterway Group LBG · MYD Ghana<br>Accra, Ghana</div></div></div>
         </div>
       </div>
     </div>
@@ -892,12 +921,12 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
       <div class="label">Get Involved</div>
       <h2 class="title">Ways to Work With GPSSI</h2>
       <div class="engage-grid">
-        <div class="engage-card"><div class="engage-icon">💰</div><h3>Fund GPSSI</h3><p>Support Ghana's first independent public service accountability index. Funding opportunities exist at project, programme, and institutional levels.</p><button class="engage-link" onclick="contactFor('Funding / Grant Discussion')">Discuss Funding →</button></div>
-        <div class="engage-card"><div class="engage-icon">🤝</div><h3>Partner With Us</h3><p>CSOs, universities, media houses, and youth networks can become formal GPSSI partners — co-collecting data and co-advocating for reform.</p><button class="engage-link" onclick="contactFor('Partnership Inquiry')">Become a Partner →</button></div>
-        <div class="engage-card"><div class="engage-icon">🧑‍🎓</div><h3>Volunteer as Field Agent</h3><p>Students, national service personnel and community volunteers can join our field network as trained GPSSI agents.</p><button class="engage-link" onclick="contactFor('Volunteer or Join the Team')">Apply Now →</button></div>
-        <div class="engage-card"><div class="engage-icon">📰</div><h3>Media & Press</h3><p>Journalists and media organisations can access our data, request interviews, and receive advance copies of our annual report under embargo.</p><button class="engage-link" onclick="contactFor('Media / Press Inquiry')">Media Request →</button></div>
-        <div class="engage-card"><div class="engage-icon">🏛️</div><h3>Government Adoption</h3><p>Ministries, agencies, and parliamentary committees can formally adopt GPSSI data for performance monitoring and reform planning.</p><button class="engage-link" onclick="contactFor('Government Adoption Inquiry')">Let's Talk →</button></div>
-        <div class="engage-card"><div class="engage-icon">🔬</div><h3>Research Collaboration</h3><p>Academic researchers can access open data, collaborate on methodology, and co-publish peer-reviewed analysis based on GPSSI findings.</p><button class="engage-link" onclick="contactFor('Research Collaboration')">Collaborate →</button></div>
+        <div class="engage-card"><div class="engage-icon"><svg class="ic" aria-hidden="true"><use href="#i-hand-coins"/></svg></div><h3>Fund GPSSI</h3><p>Support Ghana's first independent public service accountability index. Funding opportunities exist at project, programme, and institutional levels.</p><button class="engage-link" onclick="contactFor('Funding / Grant Discussion')">Discuss Funding →</button></div>
+        <div class="engage-card"><div class="engage-icon"><svg class="ic" aria-hidden="true"><use href="#i-handshake"/></svg></div><h3>Partner With Us</h3><p>CSOs, universities, media houses, and youth networks can become formal GPSSI partners — co-collecting data and co-advocating for reform.</p><button class="engage-link" onclick="contactFor('Partnership Inquiry')">Become a Partner →</button></div>
+        <div class="engage-card"><div class="engage-icon"><svg class="ic" aria-hidden="true"><use href="#i-graduation-cap"/></svg></div><h3>Volunteer as Field Agent</h3><p>Students, national service personnel and community volunteers can join our field network as trained GPSSI agents.</p><button class="engage-link" onclick="contactFor('Volunteer or Join the Team')">Apply Now →</button></div>
+        <div class="engage-card"><div class="engage-icon"><svg class="ic" aria-hidden="true"><use href="#i-newspaper"/></svg></div><h3>Media & Press</h3><p>Journalists and media organisations can access our data, request interviews, and receive advance copies of our annual report under embargo.</p><button class="engage-link" onclick="contactFor('Media / Press Inquiry')">Media Request →</button></div>
+        <div class="engage-card"><div class="engage-icon"><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg></div><h3>Government Adoption</h3><p>Ministries, agencies, and parliamentary committees can formally adopt GPSSI data for performance monitoring and reform planning.</p><button class="engage-link" onclick="contactFor('Government Adoption Inquiry')">Let's Talk →</button></div>
+        <div class="engage-card"><div class="engage-icon"><svg class="ic" aria-hidden="true"><use href="#i-microscope"/></svg></div><h3>Research Collaboration</h3><p>Academic researchers can access open data, collaborate on methodology, and co-publish peer-reviewed analysis based on GPSSI findings.</p><button class="engage-link" onclick="contactFor('Research Collaboration')">Collaborate →</button></div>
       </div>
     </div>
   </div>
@@ -907,7 +936,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
 <!--  PAGE: FILE COMPLAINT                               -->
 <!-- ════════════════════════════════════════════════════ -->
 <div class="page" id="page-complaints">
-  <div class="notice-alert">⚠️ <strong>Emergency?</strong> If you are in immediate danger, call <strong>112</strong> (Police 191 · Fire 192 · Ambulance 193). This form is for non-emergency service complaints only.</div>
+  <div class="notice-alert"><svg class="ic" aria-hidden="true"><use href="#i-triangle-alert"/></svg> <strong>Emergency?</strong> If you are in immediate danger, call <strong>112</strong> (Police 191 · Fire 192 · Ambulance 193). This form is for non-emergency service complaints only.</div>
   <div class="complaint-hero">
     <div class="page-hero-inner">
       <div class="breadcrumb" style="color:rgba(255,255,255,.5)"><span onclick="goTo('home')" style="color:rgba(252,209,22,.9)">Home</span> <span style="color:rgba(255,255,255,.3)">›</span> File a Complaint</div>
@@ -920,7 +949,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
     <!-- FORM -->
     <div class="form-card">
       <div id="complaint-form-state">
-        <div class="form-title">⚠️ Submit Your Complaint</div>
+        <div class="form-title"><svg class="ic" aria-hidden="true"><use href="#i-triangle-alert"/></svg> Submit Your Complaint</div>
         <div class="form-group">
           <label>Institution *</label>
           <div class="cb"><input id="cp-inst" placeholder="Tap and type the institution..." autocomplete="off"></div>
@@ -932,19 +961,19 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
         <div class="form-group">
           <label>Priority Level *</label>
           <div class="priority-grid">
-            <div class="prio-opt prio-low" onclick="setPrio('Low',this)"><div class="prio-icon">🟢</div><div class="prio-lbl" style="color:#16A34A">Low</div></div>
-            <div class="prio-opt prio-norm sel" onclick="setPrio('Normal',this)" style="background:#2563EB;border-color:#2563EB"><div class="prio-icon">🔵</div><div class="prio-lbl" style="color:#fff">Normal</div></div>
-            <div class="prio-opt prio-high" onclick="setPrio('High',this)"><div class="prio-icon">🟠</div><div class="prio-lbl" style="color:#D97706">High</div></div>
-            <div class="prio-opt prio-urg" onclick="setPrio('Urgent',this)"><div class="prio-icon">🔴</div><div class="prio-lbl" style="color:#DC2626">Urgent</div></div>
+            <div class="prio-opt prio-low" onclick="setPrio('Low',this)"><div class="prio-icon"><i class="pd"></i></div><div class="prio-lbl" style="color:#16A34A">Low</div></div>
+            <div class="prio-opt prio-norm sel" onclick="setPrio('Normal',this)" style="background:#2563EB;border-color:#2563EB"><div class="prio-icon"><i class="pd"></i></div><div class="prio-lbl" style="color:#fff">Normal</div></div>
+            <div class="prio-opt prio-high" onclick="setPrio('High',this)"><div class="prio-icon"><i class="pd"></i></div><div class="prio-lbl" style="color:#D97706">High</div></div>
+            <div class="prio-opt prio-urg" onclick="setPrio('Urgent',this)"><div class="prio-icon"><i class="pd"></i></div><div class="prio-lbl" style="color:#DC2626">Urgent</div></div>
           </div>
         </div>
         <div class="form-group"><label>What Happened? *</label><textarea id="cp-desc" placeholder="Be specific: what service did you need, what went wrong, how did it affect you, what response did you get (if any)?"></textarea></div>
         <div class="form-group"><label>Contact for Follow-up (optional)</label><input type="text" id="cp-contact" placeholder="Phone or email — only used for urgent follow-up. Leave blank to stay anonymous."></div>
-        <button class="c-submit" id="cp-btn" onclick="submitComplaint()">⚠️ Submit Complaint</button>
-        <p class="form-note" style="margin-top:12px">🔒 Anonymous by default. Never shared with the institution you are reporting.</p>
+        <button class="c-submit" id="cp-btn" onclick="submitComplaint()"><svg class="ic" aria-hidden="true"><use href="#i-triangle-alert"/></svg> Submit Complaint</button>
+        <p class="form-note" style="margin-top:12px"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg> Anonymous by default. Never shared with the institution you are reporting.</p>
       </div>
       <div class="success-panel" id="complaint-success">
-        <div class="success-icon">✅</div>
+        <div class="success-icon"><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg></div>
         <h3>Complaint Recorded</h3>
         <p>Your complaint has been submitted and recorded in GPSSI's national database. It will be recorded and reported alongside the institution's ratings.</p>
         <div class="success-id" id="cp-ref-id">Reference ID: —</div>
@@ -955,15 +984,15 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
     <!-- SIDEBAR -->
     <div class="c-sidebar">
       <div class="c-hotline">
-        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:8px">📞 Prefer to call?</div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:8px"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> Prefer to call?</div>
         <div class="c-hotline-num">024 986 9296</div>
         <div class="c-hotline-lbl">Call · Mon–Fri, 8am–5pm</div>
         <a href="tel:+233249869296" class="c-hotline-btn">Call Now →</a>
       </div>
-      <div class="c-info"><div class="c-info-title">🔒 Your Privacy</div><div class="c-info-text">All complaints are anonymous by default. Your details are never shared with the institution you are reporting. Optional contact info is only used for urgent follow-up by our team.</div></div>
-      <div class="c-info"><div class="c-info-title">📊 What Happens Next</div><div class="c-info-text">Your complaint is logged and assigned a reference ID. Complaints are counted and reported by institution alongside ratings.</div></div>
+      <div class="c-info"><div class="c-info-title"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg> Your Privacy</div><div class="c-info-text">All complaints are anonymous by default. Your details are never shared with the institution you are reporting. Optional contact info is only used for urgent follow-up by our team.</div></div>
+      <div class="c-info"><div class="c-info-title"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"/></svg> What Happens Next</div><div class="c-info-text">Your complaint is logged and assigned a reference ID. Complaints are counted and reported by institution alongside ratings.</div></div>
       <div class="c-info">
-        <div class="c-info-title">📋 Priority Guide</div>
+        <div class="c-info-title"><svg class="ic" aria-hidden="true"><use href="#i-clipboard-list"/></svg> Priority Guide</div>
         <div class="pguide">
           <div class="pg-row"><div class="pg-dot" style="background:#16A34A"></div><div><strong>Low</strong> — Minor inconvenience. Long queues, unhelpful staff, poor facilities.</div></div>
           <div class="pg-row"><div class="pg-dot" style="background:#2563EB"></div><div><strong>Normal</strong> — Clear service failure. Delays, errors, unresolved issues.</div></div>
@@ -971,7 +1000,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
           <div class="pg-row"><div class="pg-dot" style="background:#DC2626"></div><div><strong>Urgent</strong> — Severe impact. Medical negligence, abuse, safety failure, criminal conduct.</div></div>
         </div>
       </div>
-      <div class="c-info"><div class="c-info-title">⚖️ Other Channels</div><div class="c-info-text" style="display:flex;flex-direction:column;gap:8px"><div>🏛️ <strong>CHRAJ</strong> — Human rights violations</div><div>📡 <strong>NCA</strong> — Telecom complaints</div><div>⚡ <strong>PURC</strong> — ECG & GWCL complaints</div><div>⚖️ <strong>OSP</strong> — Corruption reports</div></div></div>
+      <div class="c-info"><div class="c-info-title"><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> Other Channels</div><div class="c-info-text" style="display:flex;flex-direction:column;gap:8px"><div><svg class="ic" aria-hidden="true"><use href="#i-landmark"/></svg> <strong>CHRAJ</strong> — Human rights violations</div><div><svg class="ic" aria-hidden="true"><use href="#i-radio-tower"/></svg> <strong>NCA</strong> — Telecom complaints</div><div><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> <strong>PURC</strong> — ECG & GWCL complaints</div><div><svg class="ic" aria-hidden="true"><use href="#i-scale"/></svg> <strong>OSP</strong> — Corruption reports</div></div></div>
     </div>
   </div>
 </div><!-- /page-complaints -->
@@ -980,8 +1009,8 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
 <!-- SUCCESS MODAL (for rating) -->
 <div class="modal-bg" id="rating-modal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-icon">✅</div>
+    <button class="modal-close" onclick="closeModal()"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <div class="modal-icon"><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg></div>
     <h3>Rating Submitted!</h3>
     <p>Thank you for helping build a more accountable Ghana. Your rating now counts toward this institution's score.</p>
     <button class="btn btn-green" style="width:100%;justify-content:center" onclick="closeModal();goTo('rankings')">See Live Rankings →</button>
@@ -1013,7 +1042,7 @@ footer { background: var(--dark); color: rgba(255,255,255,.6); padding: 72px 64p
 
 <script>
 const $=id=>document.getElementById(id),esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function goTo(p){if(p==='rate'){goTo('home');setTimeout(()=>$('rate-anchor').scrollIntoView({behavior:'smooth'}),100);return}
+function goTo(p){document.querySelector('.nav-links').classList.remove('open');if(p==='rate'){goTo('home');setTimeout(()=>$('rate-anchor').scrollIntoView({behavior:'smooth'}),100);return}
 document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
 const e=$('page-'+p);if(e){e.classList.add('active');scrollTo(0,0)}$('nav-'+p)?.classList.add('active')}
 goTo('home');$('yr').textContent=new Date().getFullYear();
@@ -1032,8 +1061,8 @@ async function sendContactMsg(){const d=await post('/api/contact',{name:$('c-nam
 if(!d.ok){alert(d.error||'Something went wrong.');return}alert('Thank you. We will reply within 2 working days.');['c-name','c-email','c-reason','c-org','c-msg'].forEach(i=>$(i).value='')}
 function closeModal(){$('rating-modal').classList.remove('open')}
 $('rating-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
-const TC={Gold:'#006B3C',Silver:'#4B9CD3',Bronze:'#CD6C2A',Red:'#E63946',Critical:'#7C3AED'},TE={Gold:'🥇',Silver:'🥈',Bronze:'🥉',Red:'🔴',Critical:'🟣'};
-const card=x=>`<div class="rank-card"><div class="rank-card-head"><div><div class="rank-card-name">${esc(x.name)}</div><div class="rank-card-cat">Based on ${x.n} ratings</div></div><span class="tier-pill tier-${x.tier}">${TE[x.tier]} ${x.tier}</span></div><div class="rank-card-body"><span class="rank-score-big">${x.score}</span><span class="rank-score-max">/100</span><div class="score-bars">${[['Responsiveness',x.r],['Service quality',x.q],['Satisfaction',x.s]].map(([l,v])=>`<div class="sbar-row"><div class="sbar-top"><span class="sbar-lbl">${l}</span><span class="sbar-val">${v}</span></div><div class="sbar-track"><div class="sbar-fill" style="width:${v}%;background:${TC[x.tier]}"></div></div></div>`).join('')}</div></div></div>`;
+const TC={Gold:'#006B3C',Silver:'#4B9CD3',Bronze:'#CD6C2A',Red:'#E63946',Critical:'#7C3AED'},TE={Gold:'',Silver:'',Bronze:'',Red:'',Critical:''};
+const card=x=>`<div class="rank-card"><div class="rank-card-head"><div><div class="rank-card-name">${esc(x.name)}</div><div class="rank-card-cat">Based on ${x.n} ratings</div></div><span class="tier-pill tier-${x.tier}">${x.tier}</span></div><div class="rank-card-body"><span class="rank-score-big">${x.score}</span><span class="rank-score-max">/100</span><div class="score-bars">${[['Responsiveness',x.r],['Service quality',x.q],['Satisfaction',x.s]].map(([l,v])=>`<div class="sbar-row"><div class="sbar-top"><span class="sbar-lbl">${l}</span><span class="sbar-val">${v}</span></div><div class="sbar-track"><div class="sbar-fill" style="width:${v}%;background:${TC[x.tier]}"></div></div></div>`).join('')}</div></div></div>`;
 async function load(){try{const d=await (await fetch('/api/stats')).json(),rk=d.institutions.filter(x=>x.ranked).sort((a,b)=>b.score-a.score),co=d.institutions.filter(x=>!x.ranked).sort((a,b)=>b.n-a.n);
 const avg=rk.length?(rk.reduce((a,x)=>a+x.score,0)/rk.length).toFixed(1):'—';
 ['hs-count','lb-total','rp-total'].forEach(i=>$(i)&&($(i).textContent=d.total));['lb-avg','rp-avg'].forEach(i=>$(i)&&($(i).textContent=avg));
