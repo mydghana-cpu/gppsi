@@ -7,7 +7,7 @@ const OTP_ON=!!E.ARKESEL_API_KEY,intl=p=>'233'+p.slice(1),RK=E.RESEND_API_KEY,NO
 const sign=(p,e)=>crypto.createHmac('sha256',SALT+'v').update(p+'|'+e).digest('hex');
 const mkTok=p=>{const e=Date.now()+72e5;return p+'|'+e+'|'+sign(p,e)};
 const okTok=(t,ph)=>{const[p,e,g]=String(t||'').split('|');return p===ph&&+e>Date.now()&&!!g&&g.length===64&&crypto.timingSafeEqual(Buffer.from(g),Buffer.from(sign(p,e)))};
-const ark=(u,o)=>fetch('https://sms.arkesel.com/api/v2/otp/'+u,{method:'POST',headers:{'api-key':E.ARKESEL_API_KEY,'Content-Type':'application/json'},body:JSON.stringify(o)}).then(x=>x.json()).catch(()=>({}));
+const ark=(u,o)=>fetch('https://sms.arkesel.com/api/otp/'+u,{method:'POST',headers:{'api-key':E.ARKESEL_API_KEY,'Content-Type':'application/json'},body:JSON.stringify(o)}).then(x=>x.json()).catch(()=>({}));
 function notify(t,o){if(!RK||!NOTIFY||t==='ratings'||(t==='complaints'&&!['High','Urgent'].includes(o.priority)))return;
  const m=t==='messages';fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+RK,'Content-Type':'application/json'},body:JSON.stringify({from:'GPSSI <onboarding@resend.dev>',to:[NOTIFY],reply_to:m?o.email:undefined,subject:m?`GPSSI message: ${o.reason||'General'} - ${o.name}`:`GPSSI ${o.priority} complaint: ${o.institution}`,text:m?`From: ${o.name} <${o.email}>\nOrg: ${o.organisation||'-'}\nReason: ${o.reason}\n\n${o.message}`:`${o.institution} (${o.region})\n\n${o.description}\n\nContact: ${o.contact||'none'}`})}).catch(e=>console.error('mail',e.message));}
 const REG=['Greater Accra','Ashanti','Western','Western North','Central','Eastern','Volta','Oti','Northern','Savannah','North East','Upper East','Upper West','Bono','Bono East','Ahafo'];
