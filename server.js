@@ -1,13 +1,18 @@
 const http=require('http'),fs=require('fs'),path=require('path'),crypto=require('crypto');
 const E=process.env,PORT=E.PORT||3000,MIN=+(E.MIN_RATINGS||30),CYCLE=+(E.CYCLE||1);
 const SBU=(E.SUPABASE_URL||'').trim().replace(/\/+$/,''),SBK=(E.SUPABASE_KEY||'').trim(),AU=E.ADMIN_USER||'admin',AP=E.ADMIN_PASSWORD,SALT=E.HASH_SALT||'';
+// Arkesel key: strip spaces, line breaks and stray quotes that often get pasted in by mistake
+const AK=(E.ARKESEL_API_KEY||'').trim().replace(/^["']+|["']+$/g,'').trim();
+// Diagnostic: shows length and last 3 characters only, never the full key
+console.log('ARKESEL key length:',AK.length,'| ends with:',AK.slice(-3)||'(empty)');
 const INST=JSON.parse(fs.readFileSync(path.join(__dirname,'institutions.json'),'utf8'));
 const ALL=new Set(Object.values(INST).flat());
-const OTP_ON=!!E.ARKESEL_API_KEY,intl=p=>'233'+p.slice(1),RK=E.RESEND_API_KEY,NOTIFY=E.NOTIFY_EMAIL;
+const OTP_ON=!!AK,intl=p=>'233'+p.slice(1),RK=E.RESEND_API_KEY,NOTIFY=E.NOTIFY_EMAIL;
 const sign=(p,e)=>crypto.createHmac('sha256',SALT+'v').update(p+'|'+e).digest('hex');
 const mkTok=p=>{const e=Date.now()+72e5;return p+'|'+e+'|'+sign(p,e)};
 const okTok=(t,ph)=>{const[p,e,g]=String(t||'').split('|');return p===ph&&+e>Date.now()&&!!g&&g.length===64&&crypto.timingSafeEqual(Buffer.from(g),Buffer.from(sign(p,e)))};
-const ark=(u,o)=>fetch('https://sms.arkesel.com/api/otp/'+u,{method:'POST',headers:{'api-key':String(E.ARKESEL_API_KEY).trim(),'Content-Type':'application/json'},body:JSON.stringify(o)}).then(x=>x.json()).catch(()=>({}));
+// Arkesel OTP: POST https://sms.arkesel.com/api/otp/generate  and  /api/otp/verify
+const ark=(u,o)=>fetch('https://sms.arkesel.com/api/otp/'+u,{method:'POST',headers:{'api-key':AK,'Content-Type':'application/json'},body:JSON.stringify(o)}).then(x=>x.json()).catch(e=>({message:'request failed: '+e.message}));
 function notify(t,o){if(!RK||!NOTIFY||t==='ratings'||(t==='complaints'&&!['High','Urgent'].includes(o.priority)))return;
  const m=t==='messages';fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+RK,'Content-Type':'application/json'},body:JSON.stringify({from:'GPSSI <onboarding@resend.dev>',to:[NOTIFY],reply_to:m?o.email:undefined,subject:m?`GPSSI message: ${o.reason||'General'} - ${o.name}`:`GPSSI ${o.priority} complaint: ${o.institution}`,text:m?`From: ${o.name} <${o.email}>\nOrg: ${o.organisation||'-'}\nReason: ${o.reason}\n\n${o.message}`:`${o.institution} (${o.region})\n\n${o.description}\n\nContact: ${o.contact||'none'}`})}).catch(e=>console.error('mail',e.message));}
 const REG=['Greater Accra','Ashanti','Western','Western North','Central','Eastern','Volta','Oti','Northern','Savannah','North East','Upper East','Upper West','Bono','Bono East','Ahafo'];
@@ -52,7 +57,7 @@ http.createServer(async(req,res)=>{
  if(p==='/api/institutions')return J(res,200,{categories:INST,regions:REG,min:MIN,otp:OTP_ON});
  if(p==='/api/stats')return J(res,200,await stats());
  if(p==='/admin'){if(!admin(req,res,ip))return;res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(ADMIN);}
- if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_sender:E.ARKESEL_SENDER||'Arkesel (default)',email_alerts:!!(RK&&NOTIFY),tables:{}};
+ if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_key_length:AK.length,sms_sender:E.ARKESEL_SENDER||'Arkesel (default)',email_alerts:!!(RK&&NOTIFY),tables:{}};
  for(const t of['ratings','complaints','messages']){try{const r=await sb(t+'?select=id&limit=1');o.tables[t]=r.ok?'OK':r.status+' '+(await r.text()).slice(0,200)}catch(e){o.tables[t]='unreachable: '+e.message}}return J(res,200,o);}
  if(p==='/api/admin/data'){if(!admin(req,res,ip))return;const[ratings,complaints,messages]=await Promise.all([all('ratings','*','&order=id.desc&limit=1000'),all('complaints','*','&order=id.desc'),all('messages','*','&order=id.desc')]);return J(res,200,{stats:await stats(),ratings:ratings.slice(0,200).map(({phone_hash,...x})=>x),complaints,messages});}
  if(p==='/api/admin/export'){if(!admin(req,res,ip))return;const t=['ratings','complaints','messages'].includes(u.searchParams.get('t'))?u.searchParams.get('t'):'ratings';
@@ -66,7 +71,7 @@ http.createServer(async(req,res)=>{
   if(p==='/api/otp/send'){const ph=phone(b.phone);if(!OTP_ON||!ph)return J(res,400,{error:'Enter a valid Ghana mobile number.'});
    if(limited(ip,'o',15,36e5)||limited(ph,'op',3,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
    const r=await ark('generate',{expiry:5,length:6,medium:'sms',message:'Your GPSSI verification code is %otp_code%. It expires in 5 minutes.',number:intl(ph),sender_id:E.ARKESEL_SENDER||'Arkesel',type:'numeric'});
-   if(r.code==='1000')return J(res,200,{ok:true});console.error('arkesel',r);return J(res,502,{error:'Could not send the code: '+(r.message||'no response from Arkesel')});}
+   if(r.code==='1000')return J(res,200,{ok:true});console.error('arkesel generate',JSON.stringify(r));return J(res,502,{error:'Could not send the code: '+(r.message||'no response from Arkesel')});}
   if(p==='/api/rate'){if(limited(ip,'r',40,36e5))return J(res,429,{error:'Too many submissions from this network. Try later.'});
    const ph=phone(b.phone),[r,q,s]=[b.r,b.q,b.s].map(Number);
    if(!ALL.has(b.institution)||!REG.includes(b.region))return J(res,400,{error:'Choose an institution from the list and your region.'});
@@ -76,7 +81,7 @@ http.createServer(async(req,res)=>{
    const dup=await(await sb(`ratings?select=id&institution=eq.${encodeURIComponent(b.institution)}&phone_hash=eq.${hash}&cycle=eq.${CYCLE}`)).json();
    if(dup.length)return J(res,409,{error:'This number has already rated that institution. Thank you.'});
    let x={};if(OTP_ON&&!okTok(b.token,ph)){if(!b.code)return J(res,400,{error:'Tap "Send code" and enter the code from your SMS.',needCode:true});
-    const v=await ark('verify',{code:String(b.code).slice(0,8),number:intl(ph)});if(v.code!=='1100')return J(res,400,{error:'That code is wrong or has expired.',needCode:true});x={token:mkTok(ph)};}
+    const v=await ark('verify',{code:String(b.code).slice(0,8),number:intl(ph)});if(v.code!=='1100'){console.error('arkesel verify',JSON.stringify(v));return J(res,400,{error:'That code is wrong or has expired.',needCode:true});}x={token:mkTok(ph)};}
    return ins('ratings',{cycle:CYCLE,institution:b.institution,region:b.region,responsiveness:r,quality:q,satisfaction:s,feedback:clean(b.feedback,1000),phone_hash:hash},'This number has already rated that institution. Thank you.',x);}
   if(p==='/api/complaint'){if(limited(ip,'c',10,36e5))return J(res,429,{error:'Too many submissions. Try later.'});
    if(!ALL.has(b.institution)||!REG.includes(b.region)||clean(b.description,2000).length<15)return J(res,400,{error:'Please complete all required fields.'});
