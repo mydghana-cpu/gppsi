@@ -58,6 +58,11 @@ http.createServer(async(req,res)=>{
  if(STATIC[p]){try{const f=fs.readFileSync(path.join(__dirname,p.slice(1)));res.writeHead(200,{'Content-Type':STATIC[p],'Cache-Control':'public, max-age=86400'});return res.end(f);}catch{res.writeHead(404);return res.end('Not found');}}
  if(p==='/api/institutions')return J(res,200,{categories:INST,regions:REG,min:MIN,otp:OTP_ON});
  if(p==='/api/stats')return J(res,200,await stats());
+ if(p==='/api/public/scores.csv'){const d=await stats(),rows=d.institutions.filter(x=>x.ranked).sort((a,b)=>b.score-a.score);
+  if(!rows.length){res.writeHead(404,{'Content-Type':'text/plain'});return res.end('No institution has reached the minimum number of ratings yet.');}
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',day=new Date().toISOString().slice(0,10);
+  res.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="gpssi_institution_scores.csv"'});
+  return res.end(['institution,ratings,responsiveness,service_quality,satisfaction,score,tier,cycle,generated',...rows.map(x=>[q(x.name),x.n,x.r,x.q,x.s,x.score,x.tier,CYCLE,day].join(','))].join('\n'));}
  if(p==='/admin'){if(!admin(req,res,ip))return;res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(ADMIN);}
  if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_key_length:AK.length,sms_sender:E.ARKESEL_SENDER||'Arkesel (default)',email_alerts:!!(RK&&NOTIFY),tables:{}};
  for(const t of['ratings','complaints','messages']){try{const r=await sb(t+'?select=id&limit=1');o.tables[t]=r.ok?'OK':r.status+' '+(await r.text()).slice(0,200)}catch(e){o.tables[t]='unreachable: '+e.message}}return J(res,200,o);}
