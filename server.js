@@ -65,7 +65,7 @@ http.createServer(async(req,res)=>{
   const ins=async(t,o,ex,x={})=>{const r=await sb(t,{method:'POST',body:JSON.stringify(o),headers:{Prefer:'return=representation'}});if(r.status===409)return J(res,409,{error:ex});if(!r.ok){console.error(await r.text());return J(res,500,{error:'Could not save. Please try again.'});}cache=null;notify(t,o);return J(res,200,{ok:true,id:(await r.json())[0].id,...x});};
   if(p==='/api/otp/send'){const ph=phone(b.phone);if(!OTP_ON||!ph)return J(res,400,{error:'Enter a valid Ghana mobile number.'});
    if(limited(ip,'o',15,36e5)||limited(ph,'op',3,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
-   const r=await ark('send',{expiry:5,length:6,medium:'sms',message:'Your GPSSI verification code is %otp_code%. It expires in 5 minutes.',number:intl(ph),sender_id:E.ARKESEL_SENDER||'Arkesel',type:'numeric'});
+   const r=await ark('generate',{expiry:5,length:6,medium:'sms',message:'Your GPSSI verification code is %otp_code%. It expires in 5 minutes.',number:intl(ph),sender_id:E.ARKESEL_SENDER||'Arkesel',type:'numeric'});
    if(r.code==='1000')return J(res,200,{ok:true});console.error('arkesel',r);return J(res,502,{error:'Could not send the code: '+(r.message||'no response from Arkesel')});}
   if(p==='/api/rate'){if(limited(ip,'r',40,36e5))return J(res,429,{error:'Too many submissions from this network. Try later.'});
    const ph=phone(b.phone),[r,q,s]=[b.r,b.q,b.s].map(Number);
