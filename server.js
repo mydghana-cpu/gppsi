@@ -27,7 +27,7 @@ async function stats(){if(cache&&Date.now()-cat<30000)return cache;
  const institutions=Object.entries(m).map(([name,a])=>{const r=a.r/a.n*20,q=a.q/a.n*20,s=a.s/a.n*20,score=Math.round((.4*r+.4*q+.2*s)*10)/10;
   return{name,n:a.n,r:Math.round(r),q:Math.round(q),s:Math.round(s),score,ranked:a.n>=MIN,tier:a.n>=MIN?tier(score):null};});
  cache={total:rs.length,min:MIN,complaints:+((cs.headers.get('content-range')||'/0').split('/')[1])||0,institutions};cat=Date.now();return cache;}
-const hits=new Map();
+const hits=new Map(),lastOtp=new Map();
 function limited(ip,k,max,win){const key=k+ip,now=Date.now(),a=(hits.get(key)||[]).filter(t=>now-t<win);a.push(now);hits.set(key,a);return a.length>max;}
 setInterval(()=>{const n=Date.now();for(const[k,a]of hits){if(!a.length||n-a[a.length-1]>36e5)hits.delete(k);}},6e5);
 function body(req){return new Promise(r=>{let b='';req.on('data',c=>{b+=c;if(b.length>2e4)req.destroy();});req.on('end',()=>{try{r(JSON.parse(b))}catch{r({})}});});}
@@ -76,9 +76,10 @@ http.createServer(async(req,res)=>{
   const b=await body(req);if(b.hp)return J(res,200,{ok:true});
   const ins=async(t,o,ex,x={})=>{const r=await sb(t,{method:'POST',body:JSON.stringify(o),headers:{Prefer:'return=representation'}});if(r.status===409)return J(res,409,{error:ex});if(!r.ok){console.error(await r.text());return J(res,500,{error:'Could not save. Please try again.'});}cache=null;notify(t,o);return J(res,200,{ok:true,id:(await r.json())[0].id,...x});};
   if(p==='/api/otp/send'){const ph=phone(b.phone);if(!OTP_ON||!ph)return J(res,400,{error:'Enter a valid Ghana mobile number.'});
-   if(limited(ip,'o',15,36e5)||limited(ph,'op',3,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
+   if(limited(ip,'o',15,36e5)||limited(ph,'op',5,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
+   const wait=45e3-(Date.now()-(lastOtp.get(ph)||0));if(wait>0)return J(res,429,{error:'Please wait '+Math.ceil(wait/1e3)+' seconds before requesting another code.'});
    const r=await ark('generate',{expiry:5,length:6,medium:'sms',message:'Your GPSSI verification code is %otp_code%. It expires in 5 minutes.',number:intl(ph),sender_id:E.ARKESEL_SENDER||'Arkesel',type:'numeric'});
-   if(r.code==='1000')return J(res,200,{ok:true});console.error('arkesel generate',JSON.stringify(r));return J(res,502,{error:'Could not send the code: '+(r.message||'no response from Arkesel')});}
+   if(r.code==='1000'){lastOtp.set(ph,Date.now());return J(res,200,{ok:true});}console.error('arkesel generate',JSON.stringify(r));return J(res,502,{error:'Could not send the code: '+(r.message||'no response from Arkesel')});}
   if(p==='/api/rate'){if(limited(ip,'r',40,36e5))return J(res,429,{error:'Too many submissions from this network. Try later.'});
    const ph=phone(b.phone),[r,q,s]=[b.r,b.q,b.s].map(Number);
    if(!ALL.has(b.institution)||!REG.includes(b.region))return J(res,400,{error:'Choose an institution from the list and your region.'});
