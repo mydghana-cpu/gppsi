@@ -556,6 +556,14 @@ html{scroll-padding-top:84px}
 .rk-cat{max-width:260px;margin-top:8px}
 .pilot-note{display:none;color:rgba(255,255,255,.75);font-size:13px;line-height:1.5;max-width:560px}.pilot .pilot-note{display:block}.pilot .live-bar .live-stat{display:none}.home-side .pilot-note{grid-column:1/-1}
 .dp-link.off{opacity:.5;pointer-events:none}
+
+/* ─── OTP + TOASTS ───────────────────────────────────── */
+#f-code{font-size:20px;letter-spacing:6px;text-align:center}
+.otp-help{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin-top:8px}
+.otp-help button{background:none;border:0;color:var(--green);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}.otp-help button:disabled{color:var(--muted);cursor:default}
+.form-btn:disabled{opacity:.55;cursor:not-allowed}
+#toasts{position:fixed;top:76px;left:50%;transform:translateX(-50%);z-index:3000;display:flex;flex-direction:column;gap:8px;width:min(92vw,420px);pointer-events:none}
+.toast{pointer-events:auto;display:flex;gap:10px;align-items:flex-start;background:#141414;color:#fff;border-left:4px solid var(--green);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:wzin .25s ease}.toast.err{border-left-color:var(--red)}.toast span{flex:1}.toast button{background:none;border:0;color:#fff;opacity:.6;font-size:18px;line-height:1;cursor:pointer}
 </style>
 </head>
 <body>
@@ -629,9 +637,9 @@ html{scroll-padding-top:84px}
           <div class="form-group"><label>Institution *</label><div class="cb"><input id="f-inst" placeholder="Tap and type: ECG, DVLA, Korle Bu..." autocomplete="off"></div><div class="star-label"></div></div><div class="form-group"><label>Your Region *</label><select id="f-region"><option value="">— Select Region —</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Western North</option><option>Central</option><option>Eastern</option><option>Volta</option><option>Oti</option><option>Northern</option><option>Savannah</option><option>North East</option><option>Upper East</option><option>Upper West</option><option>Bono</option><option>Bono East</option><option>Ahafo</option></select><div class="star-label"></div></div><div class="form-group"><label>How were you treated? *</label><div class="stars-row" data-k="r"><span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span></div><div class="star-label">Speed, courtesy, clear answers</div></div><div class="form-group"><label>How good was the service itself? *</label><div class="stars-row" data-k="q"><span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span></div><div class="star-label">Accuracy, waiting time, cleanliness, fairness</div></div><div class="form-group"><label>Overall satisfaction *</label><div class="stars-row" data-k="s"><span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span></div><div class="star-label"></div></div><div class="form-group">
             <label>Describe Your Experience (optional)</label>
             <textarea id="f-feedback" placeholder="What happened? Be specific — your feedback drives accountability..."></textarea>
-          </div><div class="form-group"><label>Your Mobile Number *</label><input id="f-phone" type="tel" inputmode="tel" placeholder="024 000 0000"><div class="why-num"><h4>Why we ask for your number</h4><ul><li>It stops anyone rating the same institution twice, so scores cannot be rigged.</li><li>We text you a 6-digit code to confirm it is a real phone in your hands. The code expires after 5 minutes.</li><li>Your number is turned into a one-way code. We cannot read it back, never show it, and never share it with institutions.</li></ul><h4>The limits</h4><ul><li>One rating per institution per number in each rating round. You can still rate other institutions.</li><li>Ghana mobile numbers only, for example 024 or 055.</li><li>Up to 3 codes per hour for each number.</li><li>Once verified, you can rate more institutions on this phone for about 2 hours without a new code.</li></ul></div><div id="otp-row" style="display:none;margin-top:10px"><button type="button" class="engage-link" onclick="sendCode()">Send verification code by SMS</button><input id="f-code" inputmode="numeric" maxlength="8" placeholder="Enter the code from your SMS" style="margin-top:8px"></div></div><input id="f-hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">
+          </div><div class="form-group"><label>Your Mobile Number *</label><input id="f-phone" type="tel" inputmode="tel" placeholder="024 000 0000"><div class="why-num"><h4>Why we ask for your number</h4><ul><li>It stops anyone rating the same institution twice, so scores cannot be rigged.</li><li>We text you a 6-digit code to confirm it is a real phone in your hands. The code expires after 5 minutes.</li><li>Your number is turned into a one-way code. We cannot read it back, never show it, and never share it with institutions.</li></ul><h4>The limits</h4><ul><li>One rating per institution per number in each rating round. You can still rate other institutions.</li><li>Ghana mobile numbers only, for example 024 or 055.</li><li>Up to 5 codes per hour for each number, with a short wait between codes.</li><li>Once verified, you can rate more institutions on this phone for about 2 hours without a new code.</li></ul></div><div id="otp-row" style="display:none;margin-top:10px"><input id="f-code" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Enter the 6-digit code"><div class="otp-help"><span>Code sent. It can take up to a minute.</span><button type="button" id="resend-btn" onclick="sendCode(true)" disabled>Resend code</button></div></div></div><input id="f-hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px">
           <div class="wz-err" id="wz-err"></div><div class="wz-nav"><button type="button" class="wz-back">← Back</button><button type="button" class="wz-next">Next →</button></div>
-          <button class="form-btn" id="home-submit-btn" onclick="submitRating()">Submit Rating →</button>
+          <button class="form-btn" id="home-submit-btn" onclick="mainBtn()">Submit Rating →</button>
           <p class="form-note"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg> Your number is stored as a one-way code and never shown or shared.</p>
         </div>
         <div class="rate-info">
@@ -1085,13 +1093,13 @@ function setPrio(v,el){prio=v;document.querySelectorAll('.prio-opt').forEach(o=>
 async function post(u,b){try{const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});return await r.json()}catch{return{error:'Could not connect. Please try again.'}}}
 async function submitRating(){const btn=$('home-submit-btn');btn.disabled=true;btn.textContent='Submitting...';
 const d=await post('/api/rate',{institution:$('f-inst').value,region:$('f-region').value,r:R.r,q:R.q,s:R.s,phone:$('f-phone').value,code:$('f-code').value,token:sessionStorage.gt||'',feedback:$('f-feedback').value,hp:$('f-hp').value});
-btn.disabled=false;btn.textContent='Submit Rating →';if(d.token)sessionStorage.gt=d.token;if(d.needCode)$('otp-row').style.display='block';if(!d.ok){alert(d.error||'Something went wrong.');return}
-$('rating-modal').classList.add('open');['f-inst','f-region','f-phone','f-feedback','f-code'].forEach(i=>$(i).value='');R={r:0,q:0,s:0};document.querySelectorAll('.star').forEach(x=>x.classList.remove('on'));load()}
+if(d.token)sessionStorage.gt=d.token;if(d.needCode)sent=true;refreshBtn();if(!d.ok){notify(d.error||'Something went wrong.','err');return}
+$('rating-modal').classList.add('open');['f-inst','f-region','f-phone','f-feedback','f-code'].forEach(i=>$(i).value='');sent=false;clearInterval(cdT);refreshBtn();R={r:0,q:0,s:0};document.querySelectorAll('.star').forEach(x=>x.classList.remove('on'));load()}
 async function submitComplaint(){const btn=$('cp-btn');btn.disabled=true;
 const d=await post('/api/complaint',{institution:$('cp-inst').value,region:$('cp-region').value,description:$('cp-desc').value,contact:$('cp-contact').value,date:$('cp-date').value,priority:prio});btn.disabled=false;
-if(!d.ok){alert(d.error||'Something went wrong.');return}$('complaint-form-state').style.display='none';$('complaint-success').classList.add('show');$('cp-ref-id').textContent='Reference ID: GPSSI-'+d.id;load()}
+if(!d.ok){notify(d.error||'Something went wrong.','err');return}$('complaint-form-state').style.display='none';$('complaint-success').classList.add('show');$('cp-ref-id').textContent='Reference ID: GPSSI-'+d.id;load()}
 async function sendContactMsg(){const d=await post('/api/contact',{name:$('c-name').value,email:$('c-email').value,reason:$('c-reason').value,organisation:$('c-org').value,message:$('c-msg').value});
-if(!d.ok){alert(d.error||'Something went wrong.');return}alert('Thank you. We will reply within 2 working days.');['c-name','c-email','c-reason','c-org','c-msg'].forEach(i=>$(i).value='')}
+if(!d.ok){notify(d.error||'Something went wrong.','err');return}alert('Thank you. We will reply within 2 working days.');['c-name','c-email','c-reason','c-org','c-msg'].forEach(i=>$(i).value='')}
 function closeModal(){window.wzReset&&wzReset();$('rating-modal').classList.remove('open')}
 $('rating-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
 const TC={Gold:'#006B3C',Silver:'#4B9CD3',Bronze:'#CD6C2A',Red:'#E63946',Critical:'#7C3AED'},TE={Gold:'',Silver:'',Bronze:'',Red:'',Critical:''};
@@ -1120,9 +1128,24 @@ const show=()=>{const q=inp.value.toLowerCase().trim();let h='';for(const[c,l]of
 inp.addEventListener('input',show);inp.addEventListener('focus',show);
 box.addEventListener('click',e=>{const t=e.target.closest('.cb-item');if(t){inp.value=t.dataset.n;box.style.display='none'}});
 inp.addEventListener('blur',()=>setTimeout(()=>{box.style.display='none';if(!NAMES.has(inp.value))inp.value=''},250))}
-async function sendCode(){const d=await post('/api/otp/send',{phone:$('f-phone').value});alert(d.ok?'Code sent. Check your SMS.':d.error)}
+let otpOn=false,sent=false,cdT=null;
+const otpNeeded=()=>otpOn&&!sessionStorage.gt;
+function refreshBtn(){const b=$('home-submit-btn'),need=otpNeeded();$('otp-row').style.display=need&&sent?'block':'none';
+if(!need){b.textContent='Submit Rating →';b.disabled=false;return}
+if(!sent){b.textContent='Send verification code';b.disabled=false;return}
+const ok=$('f-code').value.trim().length>=6;b.textContent=ok?'Submit Rating →':'Enter code to submit rating';b.disabled=!ok}
+function startCd(n){const r=$('resend-btn');clearInterval(cdT);r.disabled=true;const t=()=>{r.textContent=n>0?'Resend code in '+n+'s':'Resend code';if(n<=0){clearInterval(cdT);r.disabled=false}n--};t();cdT=setInterval(t,1000)}
+async function sendCode(again){const b=$('home-submit-btn'),r=$('resend-btn');if(!$('f-phone').value.trim()){notify('Enter your mobile number first.','err');return}
+if(again){r.disabled=true;r.textContent='Sending...'}else{b.disabled=true;b.textContent='Sending code...'}
+const d=await post('/api/otp/send',{phone:$('f-phone').value});
+if(!d.ok){notify(d.error||'Could not send the code.','err');if(again)startCd(10);else refreshBtn();return}
+sent=true;startCd(45);refreshBtn();$('f-code').focus();notify('Code sent. It can take up to a minute to arrive.')}
+function mainBtn(){if(otpNeeded()&&!sent)sendCode();else submitRating()}
+function notify(m,t){let b=$('toasts');if(!b){b=document.createElement('div');b.id='toasts';document.body.appendChild(b)}const e=document.createElement('div');e.className='toast '+(t||'ok');e.setAttribute('role','status');e.innerHTML='<span></span><button aria-label="Close">×</button>';e.firstChild.textContent=m;e.lastChild.onclick=()=>e.remove();b.appendChild(e);setTimeout(()=>e.remove(),t==='err'?7000:4500)}
+window.alert=m=>notify(String(m));
+$('f-phone').addEventListener('input',()=>{if(sent){sent=false;clearInterval(cdT);$('f-code').value='';refreshBtn()}});$('f-code').addEventListener('input',refreshBtn);
 function contactFor(r){goTo('contact');$('c-reason').value=r;setTimeout(()=>$('c-name').focus(),150)}
-(async()=>{try{const d=await (await fetch('/api/institutions')).json();NAMES=new Set(Object.values(d.categories).flat());for(const[c,l]of Object.entries(d.categories))l.forEach(n=>CAT[n]=c);combo($('f-inst'),d.categories);combo($('cp-inst'),d.categories);if(d.otp&&!sessionStorage.gt)$('otp-row').style.display='block'}catch{}})();
+(async()=>{try{const d=await (await fetch('/api/institutions')).json();NAMES=new Set(Object.values(d.categories).flat());for(const[c,l]of Object.entries(d.categories))l.forEach(n=>CAT[n]=c);combo($('f-inst'),d.categories);combo($('cp-inst'),d.categories);otpOn=!!d.otp;refreshBtn()}catch{}})();
 $('cp-date').valueAsDate=new Date();load();setInterval(load,30000);
 
 (function(){const card=document.querySelector('#rate-anchor .form-card'),gs=[...card.querySelectorAll('.form-group')],mq=matchMedia('(max-width:1099px)'),N=gs.length;let i=0;
