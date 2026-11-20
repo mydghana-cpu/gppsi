@@ -4,10 +4,13 @@ const SBU=(E.SUPABASE_URL||'').trim().replace(/\/+$/,''),SBK=(E.SUPABASE_KEY||''
 const unq=v=>String(v||'').trim().replace(/^["']+|["']+$/g,'').trim();
 // All SMS (verification codes, thank-yous, reminders) goes through Arkesel only, with one API key and one sender ID.
 const AK=unq(E.ARKESEL_API_KEY);
-const SENDER=unq(E.ARKESEL_SENDER||'BETTERWAY').slice(0,11); // sender IDs are max 11 characters
+const SENDER=unq(E.ARKESEL_SENDER||'MYD Ghana').slice(0,11); // sender IDs are max 11 characters
+// How codes are sent: "sms" (default) = our own code sent as a normal Arkesel SMS with your approved sender ID (shows in the Arkesel SMS log).
+// "arkesel" = Arkesel's separate OTP service (the route that was not delivering).
+const OTP_MODE=unq(E.OTP_MODE||'sms').toLowerCase()==='arkesel'?'arkesel':'sms';
 // Limits (override in Render > Environment). IP limits are generous because a whole campus can share one IP address.
 const RATE_IP=+(E.RATE_IP_LIMIT||300),OTP_IP=+(E.OTP_IP_LIMIT||200),OTP_CAP=+(E.OTP_DAILY_CAP||1500);
-const OTP_PHONE=+(E.OTP_PHONE_HOURLY||10),OTP_WAIT=+(E.OTP_WAIT_SECONDS||20),FETCH_MS=+(E.SMS_TIMEOUT_MS||12000);
+const OTP_PHONE=+(E.OTP_PHONE_HOURLY||5),OTP_WAIT=+(E.OTP_WAIT_SECONDS||20),FETCH_MS=+(E.SMS_TIMEOUT_MS||12000);
 if(!SALT)console.warn('HASH_SALT is not set. Phone hashes are unsalted and verification tokens use a temporary key. Set HASH_SALT in Render and never change it afterwards.');
 if(!E.PHONE_KEY)console.warn('PHONE_KEY is not set: saved contact numbers are encrypted with HASH_SALT instead. Set a separate PHONE_KEY and back it up.');
 if(!AK)console.warn('ARKESEL_API_KEY is not set: phone verification and SMS are OFF.');
@@ -21,14 +24,20 @@ const teq=(a,b)=>{a=Buffer.from(String(a));b=Buffer.from(String(b));return a.len
 const sign=(p,e)=>crypto.createHmac('sha256',TKEY+'v').update(p+'|'+e).digest('hex');
 const mkTok=p=>{const e=Date.now()+72e5;return p+'|'+e+'|'+sign(p,e)};
 const okTok=(t,ph)=>{const[p,e,g]=String(t||'').split('|');return p===ph&&+e>Date.now()&&!!g&&teq(g,sign(p,e))};
-// Normal Arkesel SMS (thank-you, reminders, admin test). Times out instead of hanging.
+// Our own 6-digit codes (used when OTP_MODE is "sms"). Nothing is stored: the code is derived from a signed token the browser holds,
+// and the code itself is only ever sent by SMS. Valid for 10 minutes. Older codes keep working if a late SMS arrives.
+const osig=b=>crypto.createHmac('sha256',TKEY+'o').update(b).digest('hex');
+const codeOf=b=>String(parseInt(crypto.createHmac('sha256',TKEY+'k').update(b).digest('hex').slice(0,8),16)%1e6).padStart(6,'0');
+const mkOtp=ph=>{const b=ph+'|'+(Date.now()+6e5)+'|'+crypto.randomBytes(6).toString('hex');return{tok:b+'|'+osig(b),code:codeOf(b)}};
+const chkOtp=(toks,ph,code)=>{for(const t of String(toks||'').split(',').slice(0,5)){const a=t.split('|');if(a.length!==4)continue;const b=a[0]+'|'+a[1]+'|'+a[2];if(a[0]===ph&&+a[1]>Date.now()&&teq(a[3],osig(b))&&teq(String(code).trim(),codeOf(b)))return true}return false};
+// Normal Arkesel SMS (codes, thank-you, reminders, admin test). Times out instead of hanging.
 async function sendSms(to,msg){try{const u='https://sms.arkesel.com/sms/api?action=send-sms&api_key='+encodeURIComponent(AK)+'&to='+to+'&from='+encodeURIComponent(SENDER)+'&sms='+encodeURIComponent(msg);const r=await fetch(u,{signal:AbortSignal.timeout(FETCH_MS)}),t=await r.text();let j={};try{j=JSON.parse(t)}catch{}return{ok:j.code==='ok'||j.status==='success',raw:t.slice(0,300)}}catch(e){return{ok:false,raw:'request failed: '+e.message}}}
 // Contacts (only people who tick the opt-in box): number kept encrypted, separate from ratings
 const CONTACTS_ON=!!(E.PHONE_KEY||SALT),PKEY=crypto.scryptSync(E.PHONE_KEY||SALT||'x','gpssi-contacts',32);
 const cHash=ph=>crypto.createHmac('sha256',SALT+'c').update(ph).digest('hex');
 const encPhone=ph=>{const iv=crypto.randomBytes(12),c=crypto.createCipheriv('aes-256-gcm',PKEY,iv),e=Buffer.concat([c.update(ph,'utf8'),c.final()]);return Buffer.concat([iv,c.getAuthTag(),e]).toString('base64')};
 const decPhone=t=>{const b=Buffer.from(t,'base64'),d=crypto.createDecipheriv('aes-256-gcm',PKEY,b.subarray(0,12));d.setAuthTag(b.subarray(12,28));return Buffer.concat([d.update(b.subarray(28)),d.final()]).toString('utf8')};
-// Arkesel OTP: POST https://sms.arkesel.com/api/otp/generate  and  /api/otp/verify  (net:true means the request itself failed or timed out)
+// Arkesel OTP service (only used when OTP_MODE=arkesel): POST https://sms.arkesel.com/api/otp/generate  and  /api/otp/verify  (net:true means the request itself failed or timed out)
 const ark=(u,o)=>fetch('https://sms.arkesel.com/api/otp/'+u,{method:'POST',headers:{'api-key':AK,'Content-Type':'application/json'},body:JSON.stringify(o),signal:AbortSignal.timeout(FETCH_MS)}).then(x=>x.json()).catch(e=>({net:true,message:'request failed: '+e.message}));
 function notify(t,o){if(!RK||!NOTIFY||t==='ratings'||(t==='complaints'&&!['High','Urgent'].includes(o.priority)))return;
  const m=t==='messages';fetch('https://api.resend.com/emails',{method:'POST',signal:AbortSignal.timeout(15000),headers:{Authorization:'Bearer '+RK,'Content-Type':'application/json'},body:JSON.stringify({from:'GPSSI <onboarding@resend.dev>',to:[NOTIFY],reply_to:m?o.email:undefined,subject:m?`GPSSI message: ${o.reason||'General'} - ${o.name}`:`GPSSI ${o.priority} complaint: ${o.institution}`,text:m?`From: ${o.name} <${o.email}>\nOrg: ${o.organisation||'-'}\nReason: ${o.reason}\n\n${o.message}`:`${o.institution} (${o.region})\n\n${o.description}\n\nContact: ${o.contact||'none'}`})}).catch(e=>console.error('mail',e.message));}
@@ -97,7 +106,7 @@ http.createServer(async(req,res)=>{
   res.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="gpssi_institution_scores.csv"'});
   return res.end(['institution,ratings,responsiveness,service_quality,satisfaction,score,tier,cycle,generated',...rows.map(x=>[q(x.name),x.n,x.r,x.q,x.s,x.score,x.tier,CYCLE,day].join(','))].join('\n'));}
  if(p==='/admin'){if(!admin(req,res,ip))return;res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(ADMIN);}
- if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_provider:'arkesel',sms_sender:SENDER,hash_salt_set:!!SALT,contacts_on:CONTACTS_ON,phone_key_set:!!E.PHONE_KEY,codes_today:otpN+' of '+OTP_CAP,limits:{otp_wait_seconds:OTP_WAIT,otp_per_phone_per_hour:OTP_PHONE,otp_per_ip_per_hour:OTP_IP,timeout_ms:FETCH_MS},email_alerts:!!(RK&&NOTIFY),tables:{}};
+ if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_provider:'arkesel',sms_sender:SENDER,otp_mode:OTP_MODE,hash_salt_set:!!SALT,contacts_on:CONTACTS_ON,phone_key_set:!!E.PHONE_KEY,codes_today:otpN+' of '+OTP_CAP,limits:{otp_wait_seconds:OTP_WAIT,otp_per_phone_per_hour:OTP_PHONE,otp_per_ip_per_hour:OTP_IP,timeout_ms:FETCH_MS},email_alerts:!!(RK&&NOTIFY),tables:{}};
  for(const t of['ratings','complaints','messages']){try{const r=await sb(t+'?select=id&limit=1');o.tables[t]=r.ok?'OK':r.status+' '+(await r.text()).slice(0,200)}catch(e){o.tables[t]='unreachable: '+e.message}}return J(res,200,o);}
  // Admin-only delivery test: /api/admin/smstest?to=024XXXXXXX sends one normal SMS with your sender ID and returns Arkesel's raw answer plus your balance.
  if(p==='/api/admin/smstest'){if(!admin(req,res,ip))return;const ph=phone(u.searchParams.get('to'));if(!ph)return J(res,400,{error:'Add ?to=024XXXXXXX (a Ghana mobile number)'});
@@ -121,7 +130,7 @@ http.createServer(async(req,res)=>{
   const b=await body(req);if(b.hp)return J(res,200,{ok:true});
   const ins=async(t,o,ex,x={},after)=>{const r=await sb(t,{method:'POST',body:JSON.stringify(o),headers:{Prefer:'return=representation'}});if(r.status===409)return J(res,409,{error:ex});if(!r.ok){console.error(await r.text());return J(res,500,{error:'Could not save. Please try again.'});}cache=null;notify(t,o);if(after)after();return J(res,200,{ok:true,id:(await r.json())[0].id,...x});};
   if(p==='/api/optout'){if(limited(ip,'oo',10,36e5))return J(res,429,{error:'Too many requests. Try later.'});const ph=phone(b.phone);if(!ph)return J(res,400,{error:'Enter a valid Ghana mobile number.'});await sb('contacts?phone_hash=eq.'+cHash(ph),{method:'PATCH',body:JSON.stringify({opted_out:true})}).catch(()=>{});return J(res,200,{ok:true});}
-  // Send a verification code through Arkesel's OTP service. One request, one provider, no fallbacks that add delay.
+  // Send a verification code. One provider (Arkesel), one request, no fallbacks that add delay.
   if(p==='/api/otp/send'){const ph=phone(b.phone);if(!OTP_ON||!ph)return J(res,400,{error:'Enter a valid Ghana mobile number.'});
    // Cooldown is checked first so impatient taps do not use up the hourly allowance
    const wait=OTP_WAIT*1e3-(Date.now()-(lastOtp.get(ph)||0));if(wait>0)return J(res,429,{error:'Please wait '+Math.ceil(wait/1e3)+' seconds before requesting another code.'});
@@ -129,7 +138,14 @@ http.createServer(async(req,res)=>{
    if(limited(ip,'o',OTP_IP,36e5)||limited(ph,'op',OTP_PHONE,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
    if(otpCapped())return J(res,429,{error:'Verification is very busy right now. Please try again later or call 024 986 9296.'});
    sending.add(ph);
-   try{const r=await ark('generate',{expiry:10,length:6,medium:'sms',message:'Your GPSSI verification code is %otp_code%. It expires in 10 minutes. Do not share it.',number:intl(ph),sender_id:SENDER,type:'numeric'});
+   try{
+    if(OTP_MODE==='sms'){
+     const o=mkOtp(ph),sm=await sendSms(intl(ph),'Your GPSSI verification code is '+o.code+'. It expires in 10 minutes. Do not share it.');
+     if(sm.ok){lastOtp.set(ph,Date.now());otpN++;return J(res,200,{ok:true,otp:o.tok});}
+     console.error('arkesel sms (code)',sm.raw);
+     return J(res,502,{error:/request failed/.test(sm.raw)?'The SMS service is slow right now. Please try again in a moment.':'Could not send the code. Please check the number and try again.'});
+    }
+    const r=await ark('generate',{expiry:10,length:6,medium:'sms',message:'Your GPSSI verification code is %otp_code%. It expires in 10 minutes. Do not share it.',number:intl(ph),sender_id:SENDER,type:'numeric'});
     if(r.code==='1000'){lastOtp.set(ph,Date.now());otpN++;return J(res,200,{ok:true});}
     console.error('arkesel generate',JSON.stringify(r));
     return J(res,502,{error:r.net?'The SMS service is slow right now. Please try again in a moment.':'Could not send the code. Please check the number and try again.'});
@@ -144,9 +160,13 @@ http.createServer(async(req,res)=>{
    if(dup.length)return J(res,409,{error:'This number has already rated that institution. Thank you.'});
    let x={};if(OTP_ON&&!okTok(b.token,ph)){if(!b.code)return J(res,400,{error:'Tap "Send verification code" and enter the code from your SMS.',needCode:true});
     if(limited(ph,'ov',8,6e5))return J(res,429,{error:'Too many attempts. Please wait 10 minutes and request a new code.',needCode:true});
-    const vr=await ark('verify',{code:String(b.code).slice(0,8),number:intl(ph)});
-    if(vr.net){console.error('arkesel verify',JSON.stringify(vr));return J(res,502,{error:'Could not reach the verification service. Please tap Submit again.',needCode:true});}
-    if(vr.code!=='1100'){console.error('arkesel verify',JSON.stringify(vr));return J(res,400,{error:'That code is wrong or has expired.',needCode:true});}
+    if(OTP_MODE==='sms'){
+     if(!chkOtp(b.otp,ph,b.code))return J(res,400,{error:'That code is wrong or has expired.',needCode:true});
+    }else{
+     const vr=await ark('verify',{code:String(b.code).slice(0,8),number:intl(ph)});
+     if(vr.net){console.error('arkesel verify',JSON.stringify(vr));return J(res,502,{error:'Could not reach the verification service. Please tap Submit again.',needCode:true});}
+     if(vr.code!=='1100'){console.error('arkesel verify',JSON.stringify(vr));return J(res,400,{error:'That code is wrong or has expired.',needCode:true});}
+    }
     x={token:mkTok(ph)};}
    return ins('ratings',{cycle:CYCLE,institution:b.institution,region:b.region,responsiveness:r,quality:q,satisfaction:s,feedback:clean(b.feedback,1000),phone_hash:hash,...(GENERIC.has(b.institution)&&clean(b.location,100)?{location:clean(b.location,100)}:{})},'This number has already rated that institution. Thank you.',x,()=>afterRate(ph,b.consent===true,b.region,E.SITE_URL||('https://'+(req.headers.host||''))));}
   if(p==='/api/complaint'){if(limited(ip,'c',10,36e5))return J(res,429,{error:'Too many submissions. Try later.'});
