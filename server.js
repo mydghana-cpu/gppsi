@@ -3,12 +3,12 @@ const E=process.env,PORT=E.PORT||3000,MIN=+(E.MIN_RATINGS||30),CYCLE=+(E.CYCLE||
 const SBU=(E.SUPABASE_URL||'').trim().replace(/\/+$/,''),SBK=(E.SUPABASE_KEY||'').trim(),AU=E.ADMIN_USER||'admin',AP=E.ADMIN_PASSWORD,SALT=E.HASH_SALT||'';
 // Arkesel key: strip spaces, line breaks and stray quotes that often get pasted in by mistake
 const AK=(E.ARKESEL_API_KEY||'').trim().replace(/^["']+|["']+$/g,'').trim();
-// Diagnostic: shows length and last 3 characters only, never the full key
-console.log('ARKESEL key length:',AK.length,'| ends with:',AK.slice(-3)||'(empty)');
 // Optional: own codes sent over the normal SMS service with a (sub-)key from Arkesel's SMS API page
 const SMSK=(E.SMS_API_KEY||'').trim().replace(/^["']+|["']+$/g,'').trim();
 const SMS_KEY=SMSK||AK;
-console.log('SMS_API_KEY length:',SMSK.length,'| normal SMS key in use:',SMS_KEY?(SMSK?'SMS_API_KEY':'main key'):'none');
+// Limits (override in Render > Environment). IP limits are generous because a whole campus can share one IP address.
+const RATE_IP=+(E.RATE_IP_LIMIT||300),OTP_IP=+(E.OTP_IP_LIMIT||200),OTP_CAP=+(E.OTP_DAILY_CAP||1500);
+if(!E.PHONE_KEY)console.warn('PHONE_KEY is not set: saved contact numbers are encrypted with HASH_SALT instead. Set a separate PHONE_KEY and back it up.');
 const INST=JSON.parse(fs.readFileSync(path.join(__dirname,'institutions.json'),'utf8'));
 const ALL=new Set(Object.values(INST).flat());
 const GENERIC=new Set(['Metropolitan / Municipal / District Assembly (MMDA)', 'Regional / District Hospital (Ghana Health Service)', 'Polyclinic / CHPS / Health Centre', 'Public Technical / Vocational Institution', 'Ghana Education Service (public schools)'].filter(n=>ALL.has(n)));
@@ -44,6 +44,8 @@ async function stats(){if(cache&&Date.now()-cat<30000)return cache;
   return{name,n:a.n,r:Math.round(r),q:Math.round(q),s:Math.round(s),score,ranked:a.n>=MIN,tier:a.n>=MIN?tier(score):null};});
  cache={total:rs.length,min:MIN,complaints:+((cs.headers.get('content-range')||'/0').split('/')[1])||0,institutions};cat=Date.now();return cache;}
 const hits=new Map(),lastOtp=new Map();let bcast=false;
+// Daily cap on verification codes: protects your SMS credit from abuse. Resets at midnight UTC.
+let otpDay='',otpN=0;const otpCapped=()=>{const d=new Date().toISOString().slice(0,10);if(d!==otpDay){otpDay=d;otpN=0}return ++otpN>OTP_CAP};
 async function afterRate(ph,consent,region,site){if(!consent||!CONTACTS_ON||!SMS_KEY)return;try{
  const hash=cHash(ph),cur=await(await sb('contacts?select=last_sms_at,sms_count&phone_hash=eq.'+hash)).json();
  const up=await sb('contacts?on_conflict=phone_hash',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({phone_hash:hash,phone_enc:encPhone(ph),region,opted_out:false})});
@@ -92,7 +94,7 @@ http.createServer(async(req,res)=>{
   res.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="gpssi_institution_scores.csv"'});
   return res.end(['institution,ratings,responsiveness,service_quality,satisfaction,score,tier,cycle,generated',...rows.map(x=>[q(x.name),x.n,x.r,x.q,x.s,x.score,x.tier,CYCLE,day].join(','))].join('\n'));}
  if(p==='/admin'){if(!admin(req,res,ip))return;res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(ADMIN);}
- if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_paths:[AK?'arkesel-otp':null,OWN?'own-code-normal-sms':null].filter(Boolean),contacts_on:CONTACTS_ON,sms_key_length:AK.length,sms_sender:E.ARKESEL_SENDER||'Arkesel (default)',email_alerts:!!(RK&&NOTIFY),tables:{}};
+ if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_paths:[AK?'arkesel-otp':null,OWN?'own-code-normal-sms':null].filter(Boolean),contacts_on:CONTACTS_ON,phone_key_set:!!E.PHONE_KEY,codes_today:otpN+' of '+OTP_CAP,sms_sender:E.ARKESEL_SENDER||'Arkesel (default)',email_alerts:!!(RK&&NOTIFY),tables:{}};
  for(const t of['ratings','complaints','messages']){try{const r=await sb(t+'?select=id&limit=1');o.tables[t]=r.ok?'OK':r.status+' '+(await r.text()).slice(0,200)}catch(e){o.tables[t]='unreachable: '+e.message}}return J(res,200,o);}
  if(p==='/stop'){res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(STOP);}
  if(p==='/api/admin/contacts'){if(!admin(req,res,ip))return;const c=await all('contacts','opted_out,last_sms_at').catch(()=>null);if(!c)return J(res,200,{error:'Contacts table not set up yet.'});const cut=Date.now()-6048e5;return J(res,200,{total:c.length,on:c.filter(x=>!x.opted_out).length,eligible:c.filter(x=>!x.opted_out&&(!x.last_sms_at||Date.parse(x.last_sms_at)<cut)).length});}
@@ -113,16 +115,18 @@ http.createServer(async(req,res)=>{
   const ins=async(t,o,ex,x={},after)=>{const r=await sb(t,{method:'POST',body:JSON.stringify(o),headers:{Prefer:'return=representation'}});if(r.status===409)return J(res,409,{error:ex});if(!r.ok){console.error(await r.text());return J(res,500,{error:'Could not save. Please try again.'});}cache=null;notify(t,o);if(after)after();return J(res,200,{ok:true,id:(await r.json())[0].id,...x});};
   if(p==='/api/optout'){if(limited(ip,'oo',10,36e5))return J(res,429,{error:'Too many requests. Try later.'});const ph=phone(b.phone);if(!ph)return J(res,400,{error:'Enter a valid Ghana mobile number.'});await sb('contacts?phone_hash=eq.'+cHash(ph),{method:'PATCH',body:JSON.stringify({opted_out:true})}).catch(()=>{});return J(res,200,{ok:true});}
   if(p==='/api/otp/send'){const ph=phone(b.phone);if(!OTP_ON||!ph)return J(res,400,{error:'Enter a valid Ghana mobile number.'});
-   if(limited(ip,'o',15,36e5)||limited(ph,'op',5,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
+   if(limited(ip,'o',OTP_IP,36e5)||limited(ph,'op',5,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
    const wait=40e3-(Date.now()-(lastOtp.get(ph)||0));if(wait>0)return J(res,429,{error:'Please wait '+Math.ceil(wait/1e3)+' seconds before requesting another code.'});
+   if(otpCapped())return J(res,429,{error:'Verification is very busy right now. Please try again later or call 024 986 9296.'});
+   // Path A: Arkesel OTP service. Path O: our own code sent over normal SMS.
    const A=async()=>{const r=await ark('generate',{expiry:10,length:6,medium:'sms',message:'Your GPSSI verification code is %otp_code%. It expires in 10 minutes.',number:intl(ph),sender_id:E.ARKESEL_SENDER||'Arkesel',type:'numeric'});
     if(r.code==='1000'){lastOtp.set(ph,Date.now());J(res,200,{ok:true,via:'arkesel'});return true;}console.error('arkesel generate',JSON.stringify(r));return null};
    const O=async()=>{const code=String(crypto.randomInt(0,1e6)).padStart(6,'0'),sm=await sendSms(intl(ph),'Your GPSSI code is '+code+'. It is valid for '+OTP_MIN+' minutes. Do not share it.');
     if(sm.ok){lastOtp.set(ph,Date.now());J(res,200,{ok:true,otp:mkOtp(ph,code),via:'own'});return true;}console.error('sms send',sm.raw);return null};
-   // first try: Arkesel OTP service; "send again": our own code over normal SMS (each falls back to the other if it fails)
+   // first send: Arkesel OTP first, own code as backup. "Send again": own code first, Arkesel as backup. Each falls back to the other if sending fails.
    for(const f of(b.again?[O,A]:[A,O]).filter(f=>f===O?OWN:!!AK)){const o=await f();if(o)return o;}
    return J(res,502,{error:'Could not send the code. Please try again in a moment.'});}
-  if(p==='/api/rate'){if(limited(ip,'r',40,36e5))return J(res,429,{error:'Too many submissions from this network. Try later.'});
+  if(p==='/api/rate'){if(limited(ip,'r',RATE_IP,36e5))return J(res,429,{error:'Too many submissions from this network. Try later.'});
    const ph=phone(b.phone),[r,q,s]=[b.r,b.q,b.s].map(Number);
    if(!ALL.has(b.institution)||!REG.includes(b.region))return J(res,400,{error:'Choose an institution from the list and your region.'});
    if(![r,q,s].every(x=>Number.isInteger(x)&&x>=1&&x<=5))return J(res,400,{error:'Please give all three star ratings.'});
