@@ -57,13 +57,13 @@ const hits=new Map(),lastOtp=new Map(),sending=new Set();let bcast=false;
 // Daily cap on verification codes: protects your SMS credit from abuse. Counts only codes that were actually sent. Resets at midnight UTC.
 let otpDay='',otpN=0;const otpCapped=()=>{const d=new Date().toISOString().slice(0,10);if(d!==otpDay){otpDay=d;otpN=0}return otpN>=OTP_CAP};
 // After a rating, if the person opted in: save the number (encrypted) and send one thank-you SMS through Arkesel, at most once per 24 hours.
-async function afterRate(ph,consent,region,site){if(!consent||!CONTACTS_ON||!OTP_ON)return;try{
- const hash=cHash(ph),cur=await(await sb('contacts?select=last_sms_at,sms_count&phone_hash=eq.'+hash)).json();
+async function afterRate(ph,consent,region,site){if(!consent){return}if(!CONTACTS_ON||!OTP_ON){console.error('thank-you skipped: contacts_on='+CONTACTS_ON+' sms_on='+OTP_ON);return}try{
+ console.log('thank-you: consent received, saving contact');const hash=cHash(ph),cur=await(await sb('contacts?select=last_sms_at,sms_count&phone_hash=eq.'+hash)).json();if(!Array.isArray(cur))console.error('contacts read',JSON.stringify(cur).slice(0,300));
  const up=await sb('contacts?on_conflict=phone_hash',{method:'POST',headers:{Prefer:'resolution=merge-duplicates'},body:JSON.stringify({phone_hash:hash,phone_enc:encPhone(ph),region,opted_out:false})});
  if(!up.ok){console.error('contact save',await up.text());return}
- const c=Array.isArray(cur)?cur[0]:null;if(c&&c.last_sms_at&&Date.now()-Date.parse(c.last_sms_at)<864e5)return;
+ const c=Array.isArray(cur)?cur[0]:null;if(c&&c.last_sms_at&&Date.now()-Date.parse(c.last_sms_at)<864e5){console.log('thank-you skipped: already texted in last 24h');return}
  const sm=await sendSms(intl(ph),'GPSSI: Thank you for rating a public service. Your voice counts! Rate more at '+site+'  Stop messages: '+site+'/stop');
- if(sm.ok)await sb('contacts?phone_hash=eq.'+hash,{method:'PATCH',body:JSON.stringify({last_sms_at:new Date().toISOString(),sms_count:((c&&c.sms_count)||0)+1})});else console.error('thank-you sms',sm.raw);
+ if(sm.ok){console.log('thank-you sent');await sb('contacts?phone_hash=eq.'+hash,{method:'PATCH',body:JSON.stringify({last_sms_at:new Date().toISOString(),sms_count:((c&&c.sms_count)||0)+1})})}else console.error('thank-you sms',sm.raw);
 }catch(e){console.error('afterRate',e.message)}}
 function limited(ip,k,max,win){const key=k+ip,now=Date.now(),a=(hits.get(key)||[]).filter(t=>now-t<win);a.push(now);hits.set(key,a);return a.length>max;}
 setInterval(()=>{const n=Date.now();for(const[k,a]of hits){if(!a.length||n-a[a.length-1]>864e5)hits.delete(k);}for(const[k,t]of lastOtp){if(n-t>36e5)lastOtp.delete(k);}},6e5);
