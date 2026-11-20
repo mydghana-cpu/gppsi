@@ -10,7 +10,7 @@ const SENDER=unq(E.ARKESEL_SENDER||'MYD Ghana').slice(0,11); // sender IDs are m
 const OTP_MODE=unq(E.OTP_MODE||'sms').toLowerCase()==='arkesel'?'arkesel':'sms';
 // Limits (override in Render > Environment). IP limits are generous because a whole campus can share one IP address.
 const RATE_IP=+(E.RATE_IP_LIMIT||300),OTP_IP=+(E.OTP_IP_LIMIT||200),OTP_CAP=+(E.OTP_DAILY_CAP||1500);
-const OTP_PHONE=+(E.OTP_PHONE_HOURLY||5),OTP_WAIT=+(E.OTP_WAIT_SECONDS||20),FETCH_MS=+(E.SMS_TIMEOUT_MS||12000);
+const VERIFY_MIN=+(E.VERIFY_MINUTES||10),OTP_PHONE_DAY=+(E.OTP_PHONE_DAILY||10),OTP_PHONE=+(E.OTP_PHONE_HOURLY||5),OTP_WAIT=+(E.OTP_WAIT_SECONDS||20),FETCH_MS=+(E.SMS_TIMEOUT_MS||12000);
 if(!SALT)console.warn('HASH_SALT is not set. Phone hashes are unsalted and verification tokens use a temporary key. Set HASH_SALT in Render and never change it afterwards.');
 if(!E.PHONE_KEY)console.warn('PHONE_KEY is not set: saved contact numbers are encrypted with HASH_SALT instead. Set a separate PHONE_KEY and back it up.');
 if(!AK)console.warn('ARKESEL_API_KEY is not set: phone verification and SMS are OFF.');
@@ -22,7 +22,7 @@ const OTP_ON=!!AK,intl=p=>'233'+p.slice(1),RK=E.RESEND_API_KEY,NOTIFY=E.NOTIFY_E
 const TKEY=SALT||crypto.randomBytes(32).toString('hex');
 const teq=(a,b)=>{a=Buffer.from(String(a));b=Buffer.from(String(b));return a.length===b.length&&crypto.timingSafeEqual(a,b)};
 const sign=(p,e)=>crypto.createHmac('sha256',TKEY+'v').update(p+'|'+e).digest('hex');
-const mkTok=p=>{const e=Date.now()+72e5;return p+'|'+e+'|'+sign(p,e)};
+const mkTok=p=>{const e=Date.now()+VERIFY_MIN*6e4;return p+'|'+e+'|'+sign(p,e)};
 const okTok=(t,ph)=>{const[p,e,g]=String(t||'').split('|');return p===ph&&+e>Date.now()&&!!g&&teq(g,sign(p,e))};
 // Our own 6-digit codes (used when OTP_MODE is "sms"). Nothing is stored: the code is derived from a signed token the browser holds,
 // and the code itself is only ever sent by SMS. Valid for 10 minutes. Older codes keep working if a late SMS arrives.
@@ -66,7 +66,7 @@ async function afterRate(ph,consent,region,site){if(!consent||!CONTACTS_ON||!OTP
  if(sm.ok)await sb('contacts?phone_hash=eq.'+hash,{method:'PATCH',body:JSON.stringify({last_sms_at:new Date().toISOString(),sms_count:((c&&c.sms_count)||0)+1})});else console.error('thank-you sms',sm.raw);
 }catch(e){console.error('afterRate',e.message)}}
 function limited(ip,k,max,win){const key=k+ip,now=Date.now(),a=(hits.get(key)||[]).filter(t=>now-t<win);a.push(now);hits.set(key,a);return a.length>max;}
-setInterval(()=>{const n=Date.now();for(const[k,a]of hits){if(!a.length||n-a[a.length-1]>36e5)hits.delete(k);}for(const[k,t]of lastOtp){if(n-t>36e5)lastOtp.delete(k);}},6e5);
+setInterval(()=>{const n=Date.now();for(const[k,a]of hits){if(!a.length||n-a[a.length-1]>864e5)hits.delete(k);}for(const[k,t]of lastOtp){if(n-t>36e5)lastOtp.delete(k);}},6e5);
 function body(req){return new Promise(r=>{let b='';req.on('data',c=>{b+=c;if(b.length>2e4)req.destroy();});req.on('end',()=>{try{r(JSON.parse(b))}catch{r({})}});});}
 const J=(res,c,o)=>{res.writeHead(c,{'Content-Type':'application/json'});res.end(JSON.stringify(o));};
 const clean=(s,n)=>String(s||'').replace(/[\u0000-\u001f]/g,' ').trim().slice(0,n);
@@ -106,8 +106,8 @@ http.createServer(async(req,res)=>{
   res.writeHead(200,{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':'attachment; filename="gpssi_institution_scores.csv"'});
   return res.end(['institution,ratings,responsiveness,service_quality,satisfaction,score,tier,cycle,generated',...rows.map(x=>[q(x.name),x.n,x.r,x.q,x.s,x.score,x.tier,CYCLE,day].join(','))].join('\n'));}
  if(p==='/admin'){if(!admin(req,res,ip))return;res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(ADMIN);}
- if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_provider:'arkesel',sms_sender:SENDER,otp_mode:OTP_MODE,hash_salt_set:!!SALT,contacts_on:CONTACTS_ON,phone_key_set:!!E.PHONE_KEY,codes_today:otpN+' of '+OTP_CAP,limits:{otp_wait_seconds:OTP_WAIT,otp_per_phone_per_hour:OTP_PHONE,otp_per_ip_per_hour:OTP_IP,timeout_ms:FETCH_MS},email_alerts:!!(RK&&NOTIFY),tables:{}};
- for(const t of['ratings','complaints','messages']){try{const r=await sb(t+'?select=id&limit=1');o.tables[t]=r.ok?'OK':r.status+' '+(await r.text()).slice(0,200)}catch(e){o.tables[t]='unreachable: '+e.message}}return J(res,200,o);}
+ if(p==='/api/admin/health'){if(!admin(req,res,ip))return;const o={supabase_url:SBU||'MISSING',key_type:!SBK?'MISSING':SBK.startsWith('eyJ')?'legacy service_role JWT':SBK.startsWith('sb_secret_')?'secret key':SBK.startsWith('sb_publishable_')?'PUBLISHABLE - WRONG, use the secret key':'unknown format',sms_on:OTP_ON,sms_provider:'arkesel',sms_sender:SENDER,otp_mode:OTP_MODE,hash_salt_set:!!SALT,contacts_on:CONTACTS_ON,phone_key_set:!!E.PHONE_KEY,codes_today:otpN+' of '+OTP_CAP,limits:{verify_minutes:VERIFY_MIN,otp_per_phone_per_day:OTP_PHONE_DAY,otp_wait_seconds:OTP_WAIT,otp_per_phone_per_hour:OTP_PHONE,otp_per_ip_per_hour:OTP_IP,timeout_ms:FETCH_MS},email_alerts:!!(RK&&NOTIFY),tables:{}};
+ for(const t of['ratings','complaints','messages','contacts']){try{const r=await sb(t+(t==='contacts'?'?select=phone_hash&limit=1':'?select=id&limit=1'));o.tables[t]=r.ok?'OK':r.status+' '+(await r.text()).slice(0,200)}catch(e){o.tables[t]='unreachable: '+e.message}}return J(res,200,o);}
  // Admin-only delivery test: /api/admin/smstest?to=024XXXXXXX sends one normal SMS with your sender ID and returns Arkesel's raw answer plus your balance.
  if(p==='/api/admin/smstest'){if(!admin(req,res,ip))return;const ph=phone(u.searchParams.get('to'));if(!ph)return J(res,400,{error:'Add ?to=024XXXXXXX (a Ghana mobile number)'});
   const sm=await sendSms(intl(ph),'GPSSI test message. Please ignore.'),bal=await fetch('https://sms.arkesel.com/sms/api?action=check-balance&api_key='+encodeURIComponent(AK)+'&response=json',{signal:AbortSignal.timeout(FETCH_MS)}).then(r=>r.text()).catch(e=>'request failed: '+e.message);
@@ -135,7 +135,7 @@ http.createServer(async(req,res)=>{
    // Cooldown is checked first so impatient taps do not use up the hourly allowance
    const wait=OTP_WAIT*1e3-(Date.now()-(lastOtp.get(ph)||0));if(wait>0)return J(res,429,{error:'Please wait '+Math.ceil(wait/1e3)+' seconds before requesting another code.'});
    if(sending.has(ph))return J(res,429,{error:'Your code is already on its way. Please wait a moment.'});
-   if(limited(ip,'o',OTP_IP,36e5)||limited(ph,'op',OTP_PHONE,36e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
+   if(limited(ip,'o',OTP_IP,36e5)||limited(ph,'op',OTP_PHONE,36e5)||limited(ph,'opd',OTP_PHONE_DAY,864e5))return J(res,429,{error:'Too many codes requested. Try again later.'});
    if(otpCapped())return J(res,429,{error:'Verification is very busy right now. Please try again later or call 024 986 9296.'});
    sending.add(ph);
    try{
@@ -167,7 +167,7 @@ http.createServer(async(req,res)=>{
      if(vr.net){console.error('arkesel verify',JSON.stringify(vr));return J(res,502,{error:'Could not reach the verification service. Please tap Submit again.',needCode:true});}
      if(vr.code!=='1100'){console.error('arkesel verify',JSON.stringify(vr));return J(res,400,{error:'That code is wrong or has expired.',needCode:true});}
     }
-    x={token:mkTok(ph)};}
+    x={token:mkTok(ph)};}else if(OTP_ON)x={token:mkTok(ph)};
    return ins('ratings',{cycle:CYCLE,institution:b.institution,region:b.region,responsiveness:r,quality:q,satisfaction:s,feedback:clean(b.feedback,1000),phone_hash:hash,...(GENERIC.has(b.institution)&&clean(b.location,100)?{location:clean(b.location,100)}:{})},'This number has already rated that institution. Thank you.',x,()=>afterRate(ph,b.consent===true,b.region,E.SITE_URL||('https://'+(req.headers.host||''))));}
   if(p==='/api/complaint'){if(limited(ip,'c',10,36e5))return J(res,429,{error:'Too many submissions. Try later.'});
    if(!ALL.has(b.institution)||!REG.includes(b.region)||clean(b.description,2000).length<15)return J(res,400,{error:'Please complete all required fields.'});
