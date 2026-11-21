@@ -16,6 +16,8 @@ if(!E.PHONE_KEY)console.warn('PHONE_KEY is not set: saved contact numbers are en
 if(!AK)console.warn('ARKESEL_API_KEY is not set: phone verification and SMS are OFF.');
 const INST=JSON.parse(fs.readFileSync(path.join(__dirname,'institutions.json'),'utf8'));
 const ALL=new Set(Object.values(INST).flat());
+// Institutions that sit in one fixed region (e.g. a teaching hospital). The region is set for the rater and cannot be mismatched.
+let FIXED={};try{FIXED=JSON.parse(fs.readFileSync(path.join(__dirname,'fixed_regions.json'),'utf8'))}catch{}
 const GENERIC=new Set(['Metropolitan / Municipal / District Assembly (MMDA)', 'Regional / District Hospital (Ghana Health Service)', 'Polyclinic / CHPS / Health Centre', 'Public Technical / Vocational Institution', 'Ghana Education Service (public schools)'].filter(n=>ALL.has(n)));
 const OTP_ON=!!AK,intl=p=>'233'+p.slice(1),RK=E.RESEND_API_KEY,NOTIFY=E.NOTIFY_EMAIL;
 // Verification token: issued after a correct code, lets the same phone rate more institutions for 2 hours without a new code
@@ -98,7 +100,7 @@ http.createServer(async(req,res)=>{
  if(p==='/'||p==='/index.html'){res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(indexHtml());}
  const STATIC={'/manifest.webmanifest':'application/manifest+json','/apple-touch-icon.png':'image/png','/icon-192.png':'image/png','/icon-512.png':'image/png','/icon-maskable-512.png':'image/png','/gpssi-logo.svg':'image/svg+xml'};
  if(STATIC[p]){try{const f=fs.readFileSync(path.join(__dirname,p.slice(1)));res.writeHead(200,{'Content-Type':STATIC[p],'Cache-Control':'public, max-age=86400'});return res.end(f);}catch{res.writeHead(404);return res.end('Not found');}}
- if(p==='/api/institutions')return J(res,200,{categories:INST,regions:REG,min:MIN,otp:OTP_ON,otpWait:OTP_WAIT,generic:[...GENERIC]});
+ if(p==='/api/institutions')return J(res,200,{categories:INST,regions:REG,min:MIN,otp:OTP_ON,otpWait:OTP_WAIT,generic:[...GENERIC],fixed:FIXED});
  if(p==='/api/stats')return J(res,200,await stats());
  if(p==='/api/public/scores.csv'){const d=await stats(),rows=d.institutions.filter(x=>x.ranked).sort((a,b)=>b.score-a.score);
   if(!rows.length){res.writeHead(404,{'Content-Type':'text/plain'});return res.end('No institution has reached the minimum number of ratings yet.');}
@@ -168,10 +170,10 @@ http.createServer(async(req,res)=>{
      if(vr.code!=='1100'){console.error('arkesel verify',JSON.stringify(vr));return J(res,400,{error:'That code is wrong or has expired.',needCode:true});}
     }
     x={token:mkTok(ph)};}else if(OTP_ON)x={token:mkTok(ph)};
-   return ins('ratings',{cycle:CYCLE,institution:b.institution,region:b.region,responsiveness:r,quality:q,satisfaction:s,feedback:clean(b.feedback,1000),phone_hash:hash,...(GENERIC.has(b.institution)&&clean(b.location,100)?{location:clean(b.location,100)}:{})},'This number has already rated that institution. Thank you.',x,()=>afterRate(ph,b.consent===true,b.region,E.SITE_URL||('https://'+(req.headers.host||''))));}
+   return ins('ratings',{cycle:CYCLE,institution:b.institution,region:FIXED[b.institution]||b.region,responsiveness:r,quality:q,satisfaction:s,feedback:clean(b.feedback,1000),phone_hash:hash,...(GENERIC.has(b.institution)&&clean(b.location,100)?{location:clean(b.location,100)}:{})},'This number has already rated that institution. Thank you.',x,()=>afterRate(ph,b.consent===true,b.region,E.SITE_URL||('https://'+(req.headers.host||''))));}
   if(p==='/api/complaint'){if(limited(ip,'c',10,36e5))return J(res,429,{error:'Too many submissions. Try later.'});
    if(!ALL.has(b.institution)||!REG.includes(b.region)||clean(b.description,2000).length<15)return J(res,400,{error:'Please complete all required fields.'});
-   return ins('complaints',{institution:b.institution,region:b.region,priority:['Low','Normal','High','Urgent'].includes(b.priority)?b.priority:'Normal',description:clean(b.description,2000),contact:clean(b.contact,200)||null,incident_date:/^\d{4}-\d\d-\d\d$/.test(b.date||'')?b.date:null,...(GENERIC.has(b.institution)&&clean(b.location,100)?{location:clean(b.location,100)}:{})});}
+   return ins('complaints',{institution:b.institution,region:FIXED[b.institution]||b.region,priority:['Low','Normal','High','Urgent'].includes(b.priority)?b.priority:'Normal',description:clean(b.description,2000),contact:clean(b.contact,200)||null,incident_date:/^\d{4}-\d\d-\d\d$/.test(b.date||'')?b.date:null,...(GENERIC.has(b.institution)&&clean(b.location,100)?{location:clean(b.location,100)}:{})});}
   if(p==='/api/contact'){if(limited(ip,'m',5,36e5))return J(res,429,{error:'Too many messages. Try later.'});
    if(!clean(b.name,100)||!/^\S+@\S+\.\S+$/.test(b.email||'')||!clean(b.message,3000))return J(res,400,{error:'Please complete all required fields.'});
    return ins('messages',{name:clean(b.name,100),email:clean(b.email,200),reason:clean(b.reason,100),organisation:clean(b.organisation,200),message:clean(b.message,3000)});}}
