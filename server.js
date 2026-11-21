@@ -98,7 +98,7 @@ http.createServer(async(req,res)=>{
  res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('X-Frame-Options','DENY');res.setHeader('Referrer-Policy','same-origin');
  try{
  if(p==='/'||p==='/index.html'){res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(indexHtml());}
- const STATIC={'/manifest.webmanifest':'application/manifest+json','/apple-touch-icon.png':'image/png','/icon-192.png':'image/png','/icon-512.png':'image/png','/icon-maskable-512.png':'image/png','/gpssi-logo.svg':'image/svg+xml','/myd-logo.png':'image/png'};
+ const STATIC={'/manifest.webmanifest':'application/manifest+json','/apple-touch-icon.png':'image/png','/icon-192.png':'image/png','/icon-512.png':'image/png','/icon-maskable-512.png':'image/png','/gpssi-logo.svg':'image/svg+xml','/myd-logo.png':'image/png','/og-image.jpg':'image/jpeg','/og-image-plain.jpg':'image/jpeg'};
  if(STATIC[p]){try{const f=fs.readFileSync(path.join(__dirname,p.slice(1)));res.writeHead(200,{'Content-Type':STATIC[p],'Cache-Control':'public, max-age=86400'});return res.end(f);}catch{res.writeHead(404);return res.end('Not found');}}
  if(p==='/api/institutions')return J(res,200,{categories:INST,regions:REG,min:MIN,otp:OTP_ON,otpWait:OTP_WAIT,generic:[...GENERIC],fixed:FIXED});
  if(p==='/api/stats')return J(res,200,await stats());
