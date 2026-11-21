@@ -12,6 +12,18 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 52'><rect x='4' y='30' width='11' height='14' rx='3' fill='%23EB0412'/><rect x='18.5' y='22' width='11' height='22' rx='3' fill='%23FAC401'/><rect x='33' y='14' width='11' height='30' rx='3' fill='%23017E37'/><polygon points='38.50,1.40 39.91,5.26 44.02,5.41 40.78,7.94 41.91,11.89 38.50,9.60 35.09,11.89 36.22,7.94 32.98,5.41 37.09,5.26' fill='%231A1A1A'/><rect x='2' y='46.5' width='44' height='3' rx='1.5' fill='%231A1A1A'/></svg>">
 <title>GPSSI — Ghana Public Service Satisfaction Index</title>
 <meta name="description" content="Rate Ghana's public services in 30 seconds. An independent, youth-led citizen satisfaction index for public institutions.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GPSSI">
+<meta property="og:title" content="Used a public service lately? Rate it in 30 seconds.">
+<meta property="og:description" content="Your rating helps improve the system. GPSSI, the Ghana Public Service Satisfaction Index.">
+<meta property="og:url" content="https://gpssi.org/">
+<meta property="og:image" content="https://gpssi.org/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Used a public service lately? Rate it in 30 seconds.">
+<meta name="twitter:description" content="Your rating helps improve the system.">
+<meta name="twitter:image" content="https://gpssi.org/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap">
@@ -102,6 +114,7 @@ details.fb summary::-webkit-details-marker{display:none}details.fb[open] summary
 .thanks .ok{width:64px;height:64px;border-radius:50%;background:var(--green-light);color:var(--green);display:grid;place-items:center;font-size:32px;margin:0 auto 12px}
 .thanks h2{margin-bottom:6px}.thanks p{color:var(--muted);font-size:14px;margin-bottom:16px}
 .thanks .btn{width:100%;justify-content:center;margin-bottom:8px;padding:14px}
+.btn.wa{background:#25D366;color:#073b1b}.btn.wa:hover{background:#1ebe5b}
 /* stats + how it works */
 .stats{display:flex;gap:12px;flex-wrap:wrap}.stat{flex:1;min-width:120px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;text-align:center}
 .stat b{display:block;font-family:'Playfair Display',serif;font-size:28px;color:var(--dark);line-height:1.1}.stat span{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
@@ -260,6 +273,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:44px 0 24px;mar
       </div>
       <div class="fg" id="loc-wrap" hidden><input id="f-loc" maxlength="100" placeholder="Which one? Hospital, school or assembly (optional)"></div>
       <div id="stars"></div>
+      <div class="note" style="margin-top:8px">Rate only services you have used yourself.</div>
       <details class="fb" id="fb-det"><summary>+ Add a comment</summary><textarea id="f-feedback" placeholder="What happened? (optional)"></textarea></details>
       <div class="err" id="e2"></div>
       <button class="go" id="go2" type="button">Next</button>
@@ -282,6 +296,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.6);padding:44px 0 24px;mar
       <h2>Thank you!</h2>
       <p>Your rating is counted.<span id="okmsg"> No code needed for your next one.</span></p>
       <button class="btn" id="again" type="button">Rate another</button>
+      <a class="btn wa" id="wa" href="https://wa.me/" target="_blank" rel="noopener">Share on WhatsApp</a>
       <button class="btn ghost" type="button" onclick="goTo('rankings')">See rankings</button>
     </section>
   </div>
@@ -480,7 +495,7 @@ function render(){const cats=D.categories,keys=Object.keys(cats);
  body.innerHTML='<div class="tiles">'+keys.map(c=>'<button type="button" class="tile" data-c="'+esc(c)+'"><svg class="ic"><use href="#'+(ICON[c]||'i-landmark')+'"/></svg><span>'+esc(SH(c))+'</span></button>').join('')+'</div>'}
 inp.addEventListener('input',()=>{q=inp.value.trim().toLowerCase();render()});
 root.addEventListener('click',e=>{const r=e.target.closest('.pk-row');if(r){onPick(r.dataset.n);return}const t=e.target.closest('.tile');if(t){cat=t.dataset.c;render();return}if(e.target.closest('.pk-back')){cat=null;render()}});
-return{reset(){cat=null;q='';inp.value='';render()}}}
+return{reset(){cat=null;q='';inp.value='';render()},search(v){inp.value=v;q=v.trim().toLowerCase();render()}}}
 
 /* region: fixed for single-location institutions, otherwise remembered */
 function setRegion(sid,nid,inst){const f=D.fixed[inst],s=$(sid);
@@ -527,6 +542,7 @@ function done(){RS.inst='';RS.r=RS.q=RS.s=0;document.querySelectorAll('#stars bu
  ['f-loc','f-feedback','f-code'].forEach(i=>$(i).value='');$('fb-det').open=false;$('loc-wrap').hidden=true;sent=false;otpToks=[];clearInterval(cdT);
  $('okmsg').hidden=!ver();PK.reset();refresh2();refresh3();go(4);load()}
 $('again').onclick=()=>go(1);
+$('wa').href='https://wa.me/?text='+encodeURIComponent('I just rated a public service on GPSSI. Used one lately? Rate it in 30 seconds: '+location.origin+'/');
 
 /* complaint */
 let prio='Normal';const CP={inst:''};
@@ -566,7 +582,12 @@ async function load(){try{const d=await(await fetch('/api/stats')).json(),rk=d.i
 /* start */
 (async()=>{try{const d=await(await fetch('/api/institutions')).json();D={...D,...d};D.fixed=d.fixed||{};GEN=new Set(d.generic||[]);for(const[c,l]of Object.entries(d.categories))l.forEach(n=>CAT[n]=c)}catch{}
  $('sc-chips').innerHTML=Object.keys(D.categories).map(c=>'<span class="chip">'+esc(SH(c))+'<small>Coming 2027</small></span>').join('');
- PK=mkPicker($('pk-rate'),pick);CPK=mkPicker($('pk-cp'),cpPick);PK.reset();CPK.reset();refresh2();refresh3();load();setInterval(load,30000)})();
+ PK=mkPicker($('pk-rate'),pick);CPK=mkPicker($('pk-cp'),cpPick);PK.reset();CPK.reset();refresh2();refresh3();load();setInterval(load,30000);
+ /* direct link: gpssi.org/?i=ECG opens that institution; several matches show a short list */
+ const dq=(new URLSearchParams(location.search).get('i')||'').trim().toLowerCase();
+ if(dq){const all=Object.values(D.categories).flat(),m=all.filter(n=>n.toLowerCase()===dq),p=m.length?m:all.filter(n=>n.toLowerCase().includes(dq));
+  if(p.length===1)pick(p[0]);else if(p.length)PK.search(dq);
+  setTimeout(()=>$('rate-card').scrollIntoView({block:'start'}),150)}})();
 </script>
 </body>
 </html>
